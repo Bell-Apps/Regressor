@@ -36,7 +36,8 @@
   },
   "homepage": "https://github.com/wgalyen/Regressor#readme",
   "dependencies": {
-    "commander": "^2.15.1"
+    "commander": "^2.15.1",
+    "npmlog": "^4.1.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
