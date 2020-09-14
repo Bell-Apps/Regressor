@@ -1,8 +1,8 @@
 {
   "gridUrl": "http://localhost:4444/wd/hub",
-  "baseline": "./baseline",
-  "latest": "./latest",
-  "generatedDiffs": "./generatedDiffs",
+  "baseline": "./e2eTests/baseline",
+  "latest": "./e2eTests/latest",
+  "generatedDiffs": "./e2eTests/generatedDiffs",
   "scenarios": [
     {
       "url": "http://www.bellhelmets.com/",
