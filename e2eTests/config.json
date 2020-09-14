@@ -1,0 +1,15 @@
+{
+  "gridUrl": "http://localhost:4444/wd/hub",
+  "scenarios": [
+    {
+      "url": "http://www.bellhelmets.com/",
+      "label": "homepage",
+      "height": 2000,
+      "width": 500
+    },
+    {
+      "url": "http://www.bellhelmets.com/bike/",
+      "label": "category-bike"
+    }
+  ]
+}
