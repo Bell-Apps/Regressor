@@ -12,10 +12,13 @@ program
   .command('snap')
   .action(async () => {
     const config = {
+      gridUrl: 'http://localhost:4444/wd/hub',
       scenarios: [
         {
           url: 'http://www.bellhelmets.com/',
-          label: 'homepage'
+          label: 'homepage',
+          height: 2000,
+          width: 500
         },
         {
           url: 'http://www.bellhelmets.com/motorcycle/',
