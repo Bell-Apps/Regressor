@@ -4,7 +4,7 @@ const setupLogger = logLevel => {
   log.level = logLevel || 'info';
   log.stream = process.stdout;
   log.enableColor();
-  log.info('ayespy Logger', `Log level is ${log.level}`);
+  log.info('regressor Logger', `Log level is ${log.level}`);
 };
 
 export default {

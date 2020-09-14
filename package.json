@@ -21,7 +21,7 @@
     "lint-staged"
   ],
   "bin": {
-    "ayespy": "lib/bin/run.js"
+    "regressor": "lib/bin/run.js"
   },
   "repository": "git+https://github.com/wgalyen/Regressor.git",
   "keywords": [
@@ -37,10 +37,12 @@
   "homepage": "https://github.com/wgalyen/Regressor#readme",
   "dependencies": {
     "commander": "^2.15.1",
+    "selenium-webdriver": "^4.0.0-alpha.1",
     "npmlog": "^4.1.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
