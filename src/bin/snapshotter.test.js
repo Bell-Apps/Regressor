@@ -1,7 +1,7 @@
 /* globals jest expect */
 
 import webdriver from 'selenium-webdriver';
-import SnapShotter from './snapshotter';
+import SnapShotter from '../snapshotter';
 
 jest.mock('fs');
 jest.mock('selenium-webdriver');
