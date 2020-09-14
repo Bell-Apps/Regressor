@@ -45,12 +45,11 @@ const createDiffImage = imageData => {
             reject(error);
           }
           logger.info('comparer', 'Image differences have been generated!');
-          resolve();
+          resolve(imageData);
         }
       );
     });
   }
-  return imageData;
 };
 
 export { compare, createDiffImage };
