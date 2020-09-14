@@ -9,3 +9,7 @@ package-lock.json
 
 # babeled stuff
 lib/**
+
+latest/
+baseline/
+generatedDiffs
