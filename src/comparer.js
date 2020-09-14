@@ -16,10 +16,11 @@ const isEqual = imageData =>
           logger.error('comparer', error);
           reject(error);
         }
-        logger.info(
-          'comparer',
-          `Comparison result for: ${imageData.label} is ${equal}`
-        );
+        if (equal) {
+          logger.info('comparer', `✅ Passed: ${imageData.label}`);
+        } else {
+          logger.info('comparer', `☠️ Failed: ${imageData.label}`);
+        }
 
         resolve(equal);
       }
