@@ -26,10 +26,8 @@ program
 
     config.browser = options.browser;
 
-    //TODO: check and create dirs
-
     logger.info('run', 'Getting snapshots... 📸 ');
-    await getScreenshots(SnapShotter, config);
+    await getScreenshots(fs, SnapShotter, config);
   });
 
 program
