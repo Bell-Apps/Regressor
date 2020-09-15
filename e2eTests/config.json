@@ -4,6 +4,8 @@
   "latest": "./e2eTests/latest",
   "generatedDiffs": "./e2eTests/generatedDiffs",
   "report": "./e2eTests/reports",
+  "remoteBucketName": "bell-regressor",
+  "remoteRegion": "us-west-2",
   "scenarios": [
     {
       "url": "http://www.bellhelmets.com/",
