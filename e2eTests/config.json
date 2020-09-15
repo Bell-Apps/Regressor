@@ -10,7 +10,13 @@
       "height": 2400,
       "width": 1024,
       "removeSelectors": [".header-banner"],
-      "waitForSelector": ["#footercontent"]
+      "waitForSelector": ["#footercontent"],
+      "cookies": [
+        {
+          "name": "dw_dnt",
+          "value": "1"
+        }
+      ]
     },
     {
       "url": "http://www.bellhelmets.com/bike/",
@@ -18,28 +24,52 @@
       "height": 2400,
       "width": 1024,
       "removeSelectors": [".header-banner"],
-      "waitForSelector": ["#footercontent"]
+      "waitForSelector": ["#footercontent"],
+      "cookies": [
+        {
+          "name": "dw_dnt",
+          "value": "1"
+        }
+      ]
     },{
       "url": "http://www.bellhelmets.com/motorcycle/",
       "label": "category-motorcycle",
       "height": 2400,
       "width": 1024,
       "removeSelectors": [".header-banner"],
-      "waitForSelector": ["#footercontent"]
+      "waitForSelector": ["#footercontent"],
+      "cookies": [
+        {
+          "name": "dw_dnt",
+          "value": "1"
+        }
+      ]
     },{
       "url": "http://www.bellhelmets.com/community/",
       "label": "community",
       "height": 2400,
       "width": 1024,
       "removeSelectors": [".header-banner"],
-      "waitForSelector": ["#footercontent"]
+      "waitForSelector": ["#footercontent"],
+      "cookies": [
+        {
+          "name": "dw_dnt",
+          "value": "1"
+        }
+      ]
     },{
       "url": "http://www.bellhelmets.com/technology/",
       "label": "technology",
       "height": 2400,
       "width": 1024,
       "removeSelectors": [".header-banner"],
-      "waitForSelector": ["#footercontent"]
+      "waitForSelector": ["#footercontent"],
+      "cookies": [
+        {
+          "name": "dw_dnt",
+          "value": "1"
+        }
+      ]
     }
   ]
 }
