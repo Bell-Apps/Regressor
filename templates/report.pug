@@ -4,12 +4,12 @@ html
         style
             include style.css
 
-h1(class='title') Regressor Comparison Report
+h1(class='title') AyeSpy Comparison Report
 
 div(class='wrapper')
     each report, index in reportsData
-- let colour = index  % 2 === 0 ? 'light' : 'dark'
-        div(class=`box-${color}`)
+        - let color = index  % 2 === 0 ? 'light' : 'dark'
+        div(class=`box-${colo}`)
             h3(class='scenario') Scenario: #{report.label}
             div(class='row')
                 div(class='column')
