@@ -22,9 +22,7 @@
       "git add"
     ]
   },
-  "pre-commit": [
-
-  ],
+  "pre-commit": [],
   "bin": {
     "regressor": "lib/bin/run.js"
   },
@@ -46,6 +44,7 @@
     "looks-same": "^3.3.0",
     "npmlog": "^4.1.2",
     "pug": "^2.0.3",
+    "release-documentation-cli": "^1.8.0",
     "selenium-webdriver": "^4.0.0-alpha.1"
   },
   "devDependencies": {
