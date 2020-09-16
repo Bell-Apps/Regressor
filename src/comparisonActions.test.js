@@ -1,45 +1,80 @@
 /* globals jest expect */
 
-import { createDirectories } from './comparisonActions';
+import comparisonDataConstructor from './comparisonDataConstructor';
 
-jest.mock('fs');
-
-describe('The comparions actions', () => {
+describe('data constructor', () => {
   let mockFs;
 
   beforeEach(() => {
     mockFs = {
-      readdirSync: () => ['1', '2', '3', '4', '5', '6'],
-      access: jest.fn(),
-      mkdirSync: () => {},
-      copyFileSync: () => {}
+      existsSync: jest.fn()
     };
   });
 
-  it('Creates directories checks the directories exist before creating', async () => {
-    const config = {
-      baseline: './baselineTest',
-      latest: './latestTest',
-      generatedDiffs: './generatedDiffsTest'
-    };
-
-    await createDirectories(mockFs, config).catch(err => console.log(err));
-    expect(mockFs.access.mock.calls.length).toBe(3);
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('Creates directories for diff, latest and baseline', async () => {
-    mockFs = {
-      access: () => new Error(),
-      mkdirSync: jest.fn()
-    };
-
+  it('if file paths both exist then it should return the correct data format', async () => {
     const config = {
-      baseline: './baselineTest',
-      latest: './latestTest',
-      generatedDiffs: './generatedDiffsTest'
+      latest: 'testLatest',
+      baseline: 'testBaseline',
+      generatedDiffs: 'testDiff',
+      scenarios: [
+        {
+          viewports: [{"height": 2400, "width": 1024, "label": "large"}],
+          label: 'test1'
+        }
+      ]
     };
 
-    await createDirectories(mockFs, config).catch(err => console.log(err));
-    expect(mockFs.mkdirSync.mock.calls.length).toBe(3);
+    mockFs.existsSync.mockReturnValue(true);
+
+    const data = await comparisonDataConstructor(mockFs, config);
+
+    const expectedData = [
+      {
+        label: 'test1-large',
+        baseline: 'testBaseline/test1-large.png',
+        latest: 'testLatest/test1-large.png',
+        generatedDiffs: 'testDiff/test1-large.png',
+        tolerance: 0
+      }
+    ];
+
+    expect(data).toEqual(expectedData);
+  });
+
+  it('if files paths are not present then it should exit', async () => {
+    const configs = [
+      {
+        baseline: 'testBaseline',
+        scenarios: [
+          {
+            viewports: [{"height": 2400, "width": 1024, "label": "large"}],
+            label: 'one'
+          }
+        ]
+      },
+      {
+        latest: 'testLatest',
+        scenarios: [
+          {
+            viewports: [{"height": 2400, "width": 1024, "label": "large"}],
+            label: 'two'
+          }
+        ]
+      }
+    ];
+
+    mockFs.existsSync.mockReturnValue(false);
+
+    global.process.exit = jest.fn();
+
+    configs.forEach(
+        async config => await comparisonDataConstructor(mockFs, config)
+    );
+
+    expect(global.process.exit.mock.calls).toEqual([[1], [1]]);
   });
 });
