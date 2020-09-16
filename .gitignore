@@ -19,4 +19,4 @@ reports/
 
 e2eTests/reports/
 
-.env
+*.env
