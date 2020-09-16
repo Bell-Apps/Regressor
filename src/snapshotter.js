@@ -21,7 +21,6 @@ export default class SnapShotter {
         this._label = label;
         this._latest = latest;
         this._gridUrl = gridUrl;
-        this._viewports = viewports;
         this._width = width;
         this._height = height;
         this._browser = browser;
@@ -121,7 +120,7 @@ export default class SnapShotter {
                 'snapshotter',
                 `❌  Unable to take snapshot for ${this._label}-${
                     this._viewportLabel
-                }! ❌ ${err}`
+                }! ❌   : ${err}`
             );
         } finally {
             await this.driver.quit();

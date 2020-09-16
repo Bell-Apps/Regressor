@@ -14,8 +14,12 @@ const comparisonDataConstructor = (fs, config) =>
           throw `${scenario.label} has no label set`;
 
       scenario.viewports.forEach(viewport => {
-        const baselinePath = `${config.baseline}/${scenario.label}-${viewport.label}.png`;
-        const latestPath = `${config.latest}/${scenario.label}-${viewport.label}.png`;
+        const baselinePath = `${config.baseline}/${scenario.label}-${
+          viewport.label
+        }.png`;
+        const latestPath = `${config.latest}/${scenario.label}-${
+          viewport.label
+        }.png`;
         const generatedDiffsPath = `${config.generatedDiffs}/${
           scenario.label
         }-${viewport.label}.png`;

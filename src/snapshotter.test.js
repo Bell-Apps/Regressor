@@ -9,7 +9,7 @@ describe('The snapshotter', () => {
     jest.clearAllMocks();
   });
 
-  it('Takes navigates to a page and snaps', async () => {
+  it('Navigates to a page and snaps', async () => {
     const config = {
       gridUrl: 'https://lol.com',
       label: 'test',
@@ -60,7 +60,7 @@ describe('The snapshotter', () => {
     const config = {
       gridUrl: 'https://lol.com',
       url: 'http://www.bellhelmets.com/',
-      label: '1homepage',
+      label: 'homepage',
       waitForSelector: 'selector'
     };
 
@@ -74,8 +74,6 @@ describe('The snapshotter', () => {
   });
 
   it('Closes the browser if an error is thrown', async () => {
-    expect.assertions(1);
-
     const config = {
       gridUrl: 'https://lol.com',
       url: 'http://www.bellhelmets.com/',
@@ -90,5 +88,40 @@ describe('The snapshotter', () => {
     const mockSnapshot = new SnapShotter(config, { webdriver, By, until });
     await mockSnapshot.takeSnap();
     expect(mockSnapshot.driver.quit.mock.calls.length).toBe(1);
+  });
+
+  it('Removes Selectors', async () => {
+    const config = {
+      gridUrl: 'https://lol.com',
+      url: 'http://www.bellhelmets.com/',
+      label: '1homepage',
+      removeSelectors: ['header', 'footer']
+    };
+
+    const mockSnapshot = new SnapShotter(config, { webdriver, By, until });
+    await mockSnapshot.takeSnap();
+    expect(mockSnapshot.driver.executeScript.mock.calls.length).toBe(2);
+  });
+
+  it('Adds cookies', async () => {
+    const config = {
+      gridUrl: 'https://lol.com',
+      url: 'http://www.bellhelmets.com/',
+      label: 'homepage',
+      cookies: [
+        {
+          name: 'cookiename',
+          value: 'cookievalue'
+        },
+        {
+          name: 'anothercookiename',
+          value: 'anothercookievalue'
+        }
+      ]
+    };
+
+    const mockSnapshot = new SnapShotter(config, { webdriver, By, until });
+    await mockSnapshot.takeSnap();
+    expect(mockSnapshot.driver.addCookie.mock.calls.length).toBe(2);
   });
 });

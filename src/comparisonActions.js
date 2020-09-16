@@ -3,7 +3,6 @@ import { deleteRemote, fetchRemote, uploadRemote } from './remoteActions';
 import createDiffImage from './createDiffs';
 import comparisonDataConstructor from './comparisonDataConstructor';
 import isEqual from './comparer';
-import logger from './logger';
 
 const createComparisons = async (fs, config) => {
   const comparisonData = await comparisonDataConstructor(fs, config);
@@ -14,14 +13,7 @@ const createComparisons = async (fs, config) => {
     }
   }
 
-    if (config.remote)
-        await uploadRemote('generatedDiffs', config)
-            .then(() =>
-                logger.info('upload-remote', 'Files uploaded successfully ✅')
-            )
-            .catch(error =>
-                logger.error('upload-remote', `Error uploading files ❌  ${error}`)
-            );
+  if (config.remote) await uploadRemote('generatedDiffs', config);
 };
 
 const createDirectories = (fs, config) =>
@@ -29,11 +21,13 @@ const createDirectories = (fs, config) =>
       const directories = [];
       directories.push(config.latest, config.generatedDiffs, config.baseline);
 
-      directories.forEach(dir => {
-        const directoryExists = fs.existsSync(dir) ? true : false;
-
-        if (!directoryExists) fs.mkdirSync(dir);
+    directories.forEach(dir => {
+      fs.access(path.resolve(dir), err => {
+        if (err) {
+          fs.mkdirSync(path.resolve(dir));
+        }
       });
+    });
 
       resolve();
     });

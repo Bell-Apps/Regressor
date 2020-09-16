@@ -65,6 +65,7 @@ const generateRemoteReport = async config => {
   const url = `https://s3-${config.remoteRegion}.amazonaws.com/${
     config.remoteBucketName
   }/`;
+  console.log(url);
   await writeReport(config, createRemoteReportData(url, filteredResults));
   await uploadRemote('report', config);
 };
