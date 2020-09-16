@@ -6,25 +6,11 @@
   "report": "./e2eTests/reports",
   "remoteBucketName": "bell-regressor",
   "remoteRegion": "us-west-2",
-  "viewports": [
-    {
-      "label": "big",
-      "width": 1000,
-      "height": 10000
-    },
-    {
-      "label": "small",
-      "width": 200,
-      "height": 500
-    }
-  ],
   "scenarios": [
     {
       "url": "http://www.bellhelmets.com/",
       "label": "homepage",
-      "viewports": [{"height": 2400, "width": 1024}],
-      "height": 2400,
-      "width": 1024,
+      "viewports": [{"height": 2400, "width": 1024, "label": "large"},{"height": 2400, "width": 500, "label": "mobile"}],
       "removeSelectors": [".header-banner"],
       "cookies": [
         {
@@ -36,9 +22,8 @@
     {
       "url": "http://www.bellhelmets.com/bike/",
       "label": "category-bike",
-      "height": 2400,
-      "width": 1024,
-      "removeSelectors": [".header-banner"],
+      "removeSelectors": ["#ad-header", ".AD"],
+      "viewports": [{"height": 2400, "width": 1024, "label": "large"},{"height": 2400, "width": 500, "label": "mobile"}],
       "cookies": [
         {
           "name": "dw_dnt",
@@ -48,9 +33,8 @@
     },{
       "url": "http://www.bellhelmets.com/motorcycle/",
       "label": "category-motorcycle",
-      "height": 2400,
-      "width": 1024,
       "removeSelectors": [".header-banner"],
+      "viewports": [{"height": 2400, "width": 1024, "label": "large"},{"height": 2400, "width": 500, "label": "mobile"}],
       "cookies": [
         {
           "name": "dw_dnt",
@@ -60,8 +44,7 @@
     },{
       "url": "http://www.bellhelmets.com/community/",
       "label": "community",
-      "height": 2400,
-      "width": 1024,
+      "viewports": [{"height": 2400, "width": 1024, "label": "large"},{"height": 2400, "width": 500, "label": "mobile"}],
       "removeSelectors": [".header-banner"],
       "cookies": [
         {
@@ -72,8 +55,7 @@
     },{
       "url": "http://www.bellhelmets.com/technology/",
       "label": "technology",
-      "height": 2400,
-      "width": 1024,
+      "viewports": [{"height": 2400, "width": 1024, "label": "large"},{"height": 2400, "width": 500, "label": "mobile"}],
       "removeSelectors": [".header-banner"],
       "cookies": [
         {

@@ -3,28 +3,17 @@ import { deleteRemote, fetchRemote, uploadRemote } from './remoteActions';
 import createDiffImage from './createDiffs';
 import comparisonDataConstructor from './comparisonDataConstructor';
 import isEqual from './comparer';
-import Reporter from './reporter';
 
 const createComparisons = async (fs, config) => {
   const comparisonData = await comparisonDataConstructor(fs, config);
 
-  const reporter = new Reporter();
-
   for (let i = 0; i < comparisonData.length; i++) {
-    const scenario = comparisonData[i];
-    const equal = await isEqual(scenario);
-
-    if (equal) {
-      reporter.pass(scenario.label);
-    } else {
-      reporter.fail(scenario.label);
-      await createDiffImage(scenario);
+    if (!(await isEqual(comparisonData[i]))) {
+      await createDiffImage(comparisonData[i]);
     }
   }
 
   if (config.remote) await uploadRemote('generatedDiffs', config);
-
-  reporter.exit();
 };
 
 const createDirectories = (fs, config) =>

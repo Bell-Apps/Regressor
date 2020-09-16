@@ -32,7 +32,7 @@ program
 
     config.browser = options.browser;
     logger.info('run', 'Getting snapshots... 📸 ');
-    createDirectories(fs, config);
+    await createDirectories(fs, config);
     await getScreenshots(SnapShotter, config);
     if (options.remote) await uploadRemote('latest', config);
   });
@@ -49,7 +49,6 @@ program
     if (!options.browser) throw 'no browser specified';
     const config = require(path.resolve(options.config)); // eslint-disable-line import/no-dynamic-require
     config.browser = options.browser;
-    config.remote = options.remote;
 
     createDirectories(fs, config);
     await updateBaselineShots(fs, config).catch(error => {
@@ -70,6 +69,7 @@ program
     if (!options.browser) throw 'no browser specified';
     const config = require(path.resolve(options.config)); // eslint-disable-line import/no-dynamic-require
     config.browser = options.browser;
+    config.remote = options.remote;
 
     createDirectories(fs, config);
 
