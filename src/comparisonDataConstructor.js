@@ -7,15 +7,7 @@ const comparisonDataConstructor = (fs, config) =>
       const latestPath = `${config.latest}/${scenario.label}.png`;
       const generatedDiffsPath = `${config.generatedDiffs}/${scenario.label}.png`;
 
-      const latestFileExists = fs.access(latestPath, err => {
-        return err ? true : false;
-      });
-
-      const baselineFileExists = fs.access(baselinePath, err => {
-        return err ? true : false;
-      });
-
-      if (!latestFileExists || !baselineFileExists) {
+      if (!fs.existsSync(latestPath) || !fs.existsSync(baselinePath)) {
         logger.error(
           'comparison data construction',
           `File not present, please check both ${baselinePath} and ${latestPath} exist`
