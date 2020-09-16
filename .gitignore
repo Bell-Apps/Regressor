@@ -10,7 +10,7 @@ yarn-error.log
 lib/**
 
 # jest
-coverage/*
+coverage/**
 
 latest/
 baseline/
