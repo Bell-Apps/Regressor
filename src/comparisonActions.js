@@ -17,20 +17,19 @@ const createComparisons = async (fs, config) => {
 };
 
 const createDirectories = (fs, config) =>
-  new Promise(resolve => {
-    const directories = [];
-    directories.push(config.latest, config.generatedDiffs, config.baseline);
+    new Promise(resolve => {
+      const directories = [];
+      directories.push(config.latest, config.generatedDiffs, config.baseline);
 
-    directories.forEach(dir => {
-      fs.access(path.resolve(dir), err => {
-        if (err) {
-          fs.mkdirSync(path.resolve(dir));
-        }
+      directories.forEach(dir => {
+        const directoryExists = fs.existsSync(dir) ? true : false;
+        console.log(directoryExists);
+
+        if (!directoryExists) fs.mkdirSync(dir);
       });
-    });
 
-    resolve();
-  });
+      resolve();
+    });
 
 const clearDirectory = (fs, config) => {
   const diffsPath = path.resolve(config.generatedDiffs);
