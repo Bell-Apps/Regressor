@@ -51,7 +51,9 @@ export default class SnapShotter {
 
   async removeTheSelectors() {
     for (let i = 0; i < this._removeSelectors.length; i++) {
-      const script = `$('${this._removeSelectors[i]}').forEach(element => element.style.display = "none")`;
+      const script = `document.querySelectorAll('${
+        this._removeSelectors[i]
+      }').forEach(element => element.style.display = "none")`;
 
       await this.driver.executeScript(script);
     }
@@ -102,6 +104,12 @@ export default class SnapShotter {
         'base64'
       );
     } catch (err) {
+      logger.error(
+          'snapshotter',
+          `❌  Unable to take snapshot for ${this._label}-${
+              this._viewportLabel
+          }! ❌ ${err}`
+      );
     } finally {
       await this.driver.quit();
     }

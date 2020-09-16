@@ -72,7 +72,6 @@ program
     config.remote = options.remote;
 
     createDirectories(fs, config);
-
     clearDirectory(fs, config);
     await fetchRemoteComparisonImages(fs, config);
     await createComparisons(fs, config);
