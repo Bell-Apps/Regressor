@@ -6,14 +6,26 @@
   "report": "./e2eTests/reports",
   "remoteBucketName": "bell-regressor",
   "remoteRegion": "us-west-2",
+  "viewports": [
+    {
+      "label": "big",
+      "width": 1000,
+      "height": 10000
+    },
+    {
+      "label": "small",
+      "width": 200,
+      "height": 500
+    }
+  ],
   "scenarios": [
     {
       "url": "http://www.bellhelmets.com/",
       "label": "homepage",
+      "viewports": [{"height": 2400, "width": 1024}],
       "height": 2400,
       "width": 1024,
       "removeSelectors": [".header-banner"],
-      "waitForSelector": ["#footercontent"],
       "cookies": [
         {
           "name": "dw_dnt",
@@ -27,7 +39,6 @@
       "height": 2400,
       "width": 1024,
       "removeSelectors": [".header-banner"],
-      "waitForSelector": ["#footercontent"],
       "cookies": [
         {
           "name": "dw_dnt",
@@ -40,7 +51,6 @@
       "height": 2400,
       "width": 1024,
       "removeSelectors": [".header-banner"],
-      "waitForSelector": ["#footercontent"],
       "cookies": [
         {
           "name": "dw_dnt",
@@ -53,7 +63,6 @@
       "height": 2400,
       "width": 1024,
       "removeSelectors": [".header-banner"],
-      "waitForSelector": ["#footercontent"],
       "cookies": [
         {
           "name": "dw_dnt",
@@ -66,7 +75,6 @@
       "height": 2400,
       "width": 1024,
       "removeSelectors": [".header-banner"],
-      "waitForSelector": ["#footercontent"],
       "cookies": [
         {
           "name": "dw_dnt",
