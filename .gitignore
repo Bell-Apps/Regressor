@@ -1,5 +1,5 @@
 # Webstorm
-.idea
+.idea/
 
 # node.js
 node_modules/
@@ -16,7 +16,5 @@ latest/
 baseline/
 generatedDiffs/
 reports/
-
-e2eTests/reports/
 
 *.env
