@@ -18,3 +18,5 @@ generatedDiffs/
 reports/
 
 e2eTests/reports/
+
+.env
