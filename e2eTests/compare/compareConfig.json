@@ -1,0 +1,34 @@
+{
+  "gridUrl": "http://localhost:4444/wd/hub",
+  "baseline": "./e2eTests/compare/baseline",
+  "latest": "./e2eTests/compare/latest",
+  "generatedDiffs": "./e2eTests/compare/generatedDiffs",
+  "report": "./e2eTests/reports",
+  "remoteBucketName": "bell-regressor",
+  "remoteRegion": "us-west-2",
+  "scenarios": [
+    {
+      "url": "http://www.bellhelmets.com/",
+      "label": "pass",
+      "viewports": [{"height": 2400, "width": 1024, "label": "large"}],
+      "removeSelectors": [".header-banner"],
+      "cookies": [
+        {
+          "name": "dw_dnt",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "url": "http://www.bellhelmets.com/",
+      "label": "fail",
+      "viewports": [{"height": 2400, "width": 1024, "label": "large"}],
+      "removeSelectors": [".header-banner"],
+      "cookies": [
+        {
+          "name": "dw_dnt",
+          "value": "1"
+        }
+      ]
+    }]
+}
