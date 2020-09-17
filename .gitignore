@@ -17,4 +17,7 @@ baseline/
 generatedDiffs/
 reports/
 
+# e2eTest folders
+e2eTests/updateBaseline/baseline/*
+
 aws-config.json
