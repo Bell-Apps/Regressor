@@ -1,0 +1,8 @@
+{
+  "testEvidenceJobs":[
+    {
+      "buildName": "Regressor",
+      "ciTool": "bitrise"
+    }
+  ]
+}
