@@ -10,10 +10,11 @@ import updateBaselineShots from '../updateBaselineShots';
 import { generateLocalReport, generateRemoteReport } from '../generateReport';
 import { uploadRemote } from '../remoteActions';
 import {
-  fetchRemoteComparisonImages,
+  createBucket,
   createComparisons,
   createDirectories,
-  clearDirectory
+  clearDirectory,
+  fetchRemoteComparisonImages
 } from '../comparisonActions';
 
 setupLogger();
@@ -76,6 +77,7 @@ program
 
     createDirectories(fs, config);
     clearDirectory(fs, config);
+    createBucket(config);
     await fetchRemoteComparisonImages(fs, config);
     await createComparisons(fs, config);
   });
