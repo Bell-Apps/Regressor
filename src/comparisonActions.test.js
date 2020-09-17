@@ -4,7 +4,7 @@ import { createDirectories } from './comparisonActions';
 
 jest.mock('fs');
 
-describe('The comparions actions', () => {
+describe('The comparisons actions', () => {
   let mockFs;
 
   beforeEach(() => {
