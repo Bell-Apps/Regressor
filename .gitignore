@@ -17,4 +17,4 @@ baseline/
 generatedDiffs/
 reports/
 
-*.env
+aws-config.json

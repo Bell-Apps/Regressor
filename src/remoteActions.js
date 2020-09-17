@@ -16,6 +16,7 @@ const deleteRemote = async (key, config) => {
   const filteredResults = await listRemote(key, config);
 
   return new Promise((resolve, reject) => {
+    AWS.config.loadFromPath('./aws-config.json')
     AWS.config.update({ region: config.remoteRegion });
     const s3 = new AWS.S3();
 
@@ -59,6 +60,7 @@ const fetchRemote = async (config, key, imageName) => {
 
 const listRemote = (key, config) =>
   new Promise((resolve, reject) => {
+    AWS.config.loadFromPath('./aws-config.json')
     AWS.config.update({ region: config.remoteRegion });
     const s3 = new AWS.S3();
     const params = { Bucket: config.remoteBucketName };
@@ -77,6 +79,7 @@ const uploadRemote = async (key, config) => {
   const imageDir = await resolveImagePath(key, config);
 
   new Promise(resolve => {
+    AWS.config.loadFromPath('./aws-config.json')
     AWS.config.update({
       region: config.remoteRegion
     });
