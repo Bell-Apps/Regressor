@@ -56,7 +56,7 @@ const validateConfig = (config, isRemote) =>
             logger.info('configValidator', 'Config validated ✅');
             resolve();
         } else {
-            logger.info('config Validator', 'Exiting Regressor');
+            logger.info('configValidator', 'Exiting Regressor');
             process.exitCode = 1;
             process.exit();
         }
