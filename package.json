@@ -1,6 +1,6 @@
 {
   "name": "regressor",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "A visual regression tool",
   "main": "lib/bin/run.js",
   "scripts": {
