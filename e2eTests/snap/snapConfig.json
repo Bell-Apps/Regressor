@@ -4,8 +4,8 @@
   "latest": "./e2eTests/snap/latest",
   "generatedDiffs": "./e2eTests/snap/generatedDiffs",
   "report": "./e2eTests/reports",
-  "remoteBucketName": "aye-spy",
-  "remoteRegion": "eu-west-1",
+  "remoteBucketName": "regressor",
+  "remoteRegion": "es-west-2",
   "scenarios": [
     {
       "url": "https://www.bellhelmets.com/on/demandware.static/-/Sites-bellhelmets-Library/default/dw19f7907f/images/homepage/bell-motorcycle-helmets-1920x1080.jpg",

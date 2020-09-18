@@ -1,0 +1,22 @@
+{
+  "gridUrl": "http://localhost:4444/wd/hub",
+  "baseline": "./baseline",
+  "latest": "./e2eTests/updateBaseline/mockImages",
+  "generatedDiffs": "./generatedDiffs",
+  "report": "./reports",
+  "remoteBucketName": "regressor-e2e-tests-my-bucket",
+  "remoteRegion": "us-west-2",
+  "browser": "chrome",
+  "scenarios": [
+    {
+      "url": "http://www.google.com",
+      "label": "homepage",
+      "removeSelectors": ["#ad-header", ".AD"],
+      "cookies": [
+        {
+          "name": "acs_tnl",
+          "value": "logged_in"
+        }
+      ]
+    }]
+}

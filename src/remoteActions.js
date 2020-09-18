@@ -5,39 +5,38 @@ import logger from './logger';
 
 const resolveImagePath = (key, config) =>
     new Promise((resolve, reject) => {
-      if (key === 'latest') resolve(path.resolve(config.latest));
-      if (key === 'baseline') resolve(path.resolve(config.baseline));
-      if (key === 'generatedDiffs') resolve(path.resolve(config.generatedDiffs));
-      if (key === 'report') resolve(path.resolve(config.report));
-      reject('The key did not match any of the available options');
+        if (key === 'latest') resolve(path.resolve(config.latest));
+        if (key === 'baseline') resolve(path.resolve(config.baseline));
+        if (key === 'generatedDiffs') resolve(path.resolve(config.generatedDiffs));
+        if (key === 'report') resolve(path.resolve(config.report));
+        reject('The key did not match any of the available options');
     });
 
 const createRemote = config => {
-  AWS.config.update({ region: config.remoteRegion });
-  const s3 = new AWS.S3();
+    AWS.config.update({region: config.remoteRegion});
+    const s3 = new AWS.S3();
 
-  const params = {
-    Bucket: config.remoteBucketName,
-    GrantFullControl: 'true',
-    GrantRead: 'true',
-    GrantReadACP: 'true',
-    GrantWrite: 'true',
-    GrantWriteACP: 'true',
-    CreateBucketConfiguration: {
-      LocationConstraint: config.remoteRegion
-    }
-  };
+    const params = {
+        Bucket: config.remoteBucketName,
+        ACL: 'public-read-write',
+        CreateBucketConfiguration: {
+            LocationConstraint: config.remoteRegion
+        }
+    };
 
-  const createBucketPromise = s3.createBucket(params).promise();
-  return createBucketPromise;
+    return s3
+        .createBucket(params)
+        .promise()
+        .then(logger.info)
+        .catch(logger.error);
 };
 
 const updateRemotePolicy = config => {
-  AWS.config.update({ region: config.remoteRegion });
-  const s3 = new AWS.S3();
-  const Policy = `{
+    AWS.config.update({region: config.remoteRegion});
+    const s3 = new AWS.S3();
+    const Policy = `{
     "Version": "2008-10-17",
-    "Id": "AyeSpyPolicy",
+    "Id": "RegressorPolicy",
     "Statement": [
         {
             "Sid": "Stmt1397633323327",
@@ -51,123 +50,147 @@ const updateRemotePolicy = config => {
     ]
   }`;
 
-  const params = {
-    Bucket: config.remoteBucketName,
-    Policy
-  };
+    const params = {
+        Bucket: config.remoteBucketName,
+        Policy
+    };
 
-  s3.putBucketPolicy(params).promise();
+    s3.putBucketPolicy(params).promise();
 };
 
-const deleteRemote = (key, config) =>
-    new Promise(async (resolve, reject) => {
-      const filteredResults = await listRemote(key, config);
-
-      AWS.config.update({ region: config.remoteRegion });
-      const s3 = new AWS.S3();
-
-      const params = {
+function createDeletionParams(filteredResults, config) {
+    const params = {
         Bucket: config.remoteBucketName,
         Delete: {
-          Objects: [],
-          Quiet: false
+            Objects: [],
+            Quiet: false
         }
-      };
+    };
 
-      for (let i = 0; i < filteredResults.length; i++) {
+    for (let i = 0; i < filteredResults.length; i++) {
         const keyObject = { Key: filteredResults[i].Key };
         params.Delete.Objects.push(keyObject);
-      }
+    }
+    return params;
+}
 
-      if (filteredResults.length !== 0) {
-        s3.deleteObjects(params, (error, data) => {
-          if (error) reject(error);
-          logger.info('delete-remote', `Successfully deleted ${key}`);
-          resolve(data);
-        });
-      }
-      resolve();
-    });
+const deleteRemoteKeys = async (key, config) => {
+    const filteredResults = await listRemoteKeys(key, config);
 
-const fetchRemote = (config, key, imageName) =>
+    AWS.config.update({ region: config.remoteRegion });
+    const s3 = new AWS.S3();
+
+    const params = createDeletionParams(filteredResults, config);
+
+    if (filteredResults.length !== 0) {
+        return s3
+            .deleteObjects(params)
+            .promise()
+            .then(() => {
+                return params.Delete.Objects;
+            })
+            .catch(logger.info);
+    }
+};
+
+const deleteRemoteBucket = config => {
+    AWS.config.update({ region: config.remoteRegion });
+    const s3 = new AWS.S3();
+
+    const params = {
+        Bucket: config.remoteBucketName
+    };
+
+    return s3
+        .deleteBucket(params)
+        .promise()
+        .then(logger.info)
+        .catch(logger.error);
+};
+
+const fetchRemoteKeys = (config, key, imageName) =>
     new Promise(async (resolve, reject) => {
-      const imageDir = await resolveImagePath(key, config);
-      const remoteFileName = `${config.browser}/${key}/${imageName}`;
-      const fileName = `${imageDir}/${imageName}`;
-      const s3 = new AWS.S3();
-      AWS.config.update({ region: config.remoteRegion });
-      const params = { Bucket: config.remoteBucketName, Key: remoteFileName };
+        const imageDir = await resolveImagePath(key, config);
+        const remoteFileName = `${config.browser}/${key}/${imageName}`;
+        const fileName = `${imageDir}/${imageName}`;
+        const s3 = new AWS.S3();
+        AWS.config.update({region: config.remoteRegion});
+        const params = {Bucket: config.remoteBucketName, Key: remoteFileName};
 
-      s3.getObject(params, (error, data) => {
-        if (error) reject(error);
-        fs.writeFileSync(fileName, data.Body);
-        resolve();
-      });
-    });
-
-const listRemote = (key, config) =>
-    new Promise((resolve, reject) => {
-      AWS.config.update({ region: config.remoteRegion });
-      const s3 = new AWS.S3();
-      const params = { Bucket: config.remoteBucketName };
-
-      s3.listObjectsV2(params, (error, data) => {
-        if (error) reject(error);
-
-        const filteredResults = data.Contents.filter(item =>
-            item.Key.includes(`${config.browser}/${key}`)
-        );
-        resolve(filteredResults);
-      });
-    });
-
-const uploadRemote = async (key, config) => {
-  const imageDir = await resolveImagePath(key, config);
-  AWS.config.update({
-    region: config.remoteRegion
-  });
-  const s3 = new AWS.S3();
-  const files = fs.readdirSync(imageDir).map(file => `${imageDir}/${file}`);
-
-  if (files.length !== 0) {
-    logger.info(
-        'upload-remote',
-        `${files.length} images to be uploaded to bucket: ${key}`
-    );
-  }
-
-  return Promise.all(
-      files.map(file => {
-        const fileStream = fs.createReadStream(file);
-
-        fileStream.on('error', err => {
-          logger.error('upload-remote', err);
+        s3.getObject(params, (error, data) => {
+            if (error) reject(error);
+            fs.writeFileSync(fileName, data.Body);
+            resolve();
         });
+    });
 
-        const contentType = key === 'report' ? 'text/html' : 'image/png';
+const listRemoteKeys = (key, config) => {
+    AWS.config.update({ region: config.remoteRegion });
+    const s3 = new AWS.S3();
+    const params = { Bucket: config.remoteBucketName };
 
-        const uploadParams = {
-          Bucket: config.remoteBucketName,
-          Key: `${config.browser}/${key}/${path.basename(file)}`,
-          Body: fileStream,
-          ContentType: contentType
-        };
+    return s3
+        .listObjectsV2(params)
+        .promise()
+        .then(result => {
+            logger.info(result);
+            return result.Contents.filter(item =>
+                item.Key.includes(`${config.browser}/${key}`)
+            );
+        })
+        .catch(logger.error);
+};
 
-        const putObjectPromise = s3.putObject(uploadParams).promise();
+const uploadRemoteKeys = async (key, config) => {
+    const imageDir = await resolveImagePath(key, config);
+    AWS.config.update({
+        region: config.remoteRegion
+    });
+    const s3 = new AWS.S3();
+    const files = fs.readdirSync(imageDir).map(file => `${imageDir}/${file}`);
 
-        const promises = [];
-        promises.push(putObjectPromise);
-        return Promise.all(promises);
-      })
-  );
+    if (files.length !== 0) {
+        logger.info(
+            'upload-remote',
+            `${files.length} images to be uploaded to bucket: ${key}`
+        );
+    }
+
+    return Promise.all(
+        files.map(file => {
+            const fileStream = fs.createReadStream(file);
+
+            fileStream.on('error', err => {
+                logger.error('upload-remote', err);
+            });
+
+            const contentType = key === 'report' ? 'text/html' : 'image/png';
+
+            logger.info('Key: ' + `${config.browser}/${key}/${path.basename(file)}`);
+
+            const uploadParams = {
+                Bucket: config.remoteBucketName,
+                Key: `${config.browser}/${key}/${path.basename(file)}`,
+                Body: fileStream,
+                ContentType: contentType
+            };
+
+            const putObjectPromise = s3.putObject(uploadParams).promise();
+
+            const promises = [];
+            promises.push(putObjectPromise);
+            return Promise.all(promises);
+        })
+    );
 };
 
 export {
-  createRemote,
-  deleteRemote,
-  fetchRemote,
-  listRemote,
-  resolveImagePath,
-  uploadRemote,
-  updateRemotePolicy
+    createRemote,
+    deleteRemoteKeys,
+    deleteRemoteBucket,
+    fetchRemoteKeys,
+    listRemoteKeys,
+    resolveImagePath,
+    uploadRemoteKeys,
+    updateRemotePolicy
 };
