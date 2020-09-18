@@ -16,7 +16,7 @@ With the correct set up you can expect 40 comparisons running under a minute.
 
 The idea behind visual regression is essentially image comparison over time.
 
-There are a set of 'visually correct' baseline images of your site.
+As you make changes to your site Regressor will take new images.
 
 As you make changes to your site Regressor will take new images of your site
 
@@ -31,7 +31,7 @@ If they are expected, update the baseline images
 In order to get the most out of Regressor we recommend 
 
   - Using the [selenium images from docker hub](https://hub.docker.com/u/selenium/) for consistent repeatable state 
-  - A cloud storage (currently supporting Amazon S3). 
+  - Cloud storage (currently supporting Amazon S3)
 
 Create an S3 bucket to store your images. It will also need to have the correct permissions set up.
 
