@@ -13,7 +13,7 @@ const resolveImagePath = (key, config) =>
   });
 
 const createRemote = config => {
-  AWS.config.udpate({ region: config.remoteRegion });
+  AWS.config.update({ region: config.remoteRegion });
   const s3 = new AWS.S3();
 
   const params = {
@@ -30,7 +30,7 @@ const createRemote = config => {
 
   const createBucketPromise = s3.createBucket(params).promise();
   return createBucketPromise;
-}
+};
 
 const updateRemotePolicy = config => {
   AWS.config.update({ region: config.remoteRegion });
@@ -60,9 +60,8 @@ const updateRemotePolicy = config => {
 };
 
 const deleteRemote = async (key, config) => {
+  new Promise(async (resolve, reject) => {
   const filteredResults = await listRemote(key, config);
-
-  return new Promise((resolve, reject) => {
     AWS.config.loadFromPath('./aws-config.json')
     AWS.config.update({ region: config.remoteRegion });
     const s3 = new AWS.S3();
@@ -80,18 +79,19 @@ const deleteRemote = async (key, config) => {
       params.Delete.Objects.push(keyObject);
     }
 
-    s3.deleteObjects(params, (error, data) => {
-      if (error) reject(error);
-      logger.info('delete-remote', `Successfully deleted ${key}`);
-      resolve(data);
-    });
+    if (filteredResults.length !== 0) {
+      s3.deleteObjects(params, (error, data) => {
+        if (error) reject(error);
+        logger.info('delete-remote', `Successfully deleted ${key}`);
+        resolve(data);
+      });
+    }
+    resolve();
   });
-};
 
 const fetchRemote = async (config, key, imageName) => {
+  new Promise(async (resolve, reject) => {
   const imageDir = await resolveImagePath(key, config);
-
-  new Promise((resolve, reject) => {
     const remoteFileName = `${config.browser}/${key}/${imageName}`;
     const fileName = `${imageDir}/${imageName}`;
     const s3 = new AWS.S3();
@@ -103,7 +103,6 @@ const fetchRemote = async (config, key, imageName) => {
       resolve();
     });
   });
-};
 
 const listRemote = (key, config) =>
   new Promise((resolve, reject) => {
@@ -124,8 +123,6 @@ const listRemote = (key, config) =>
 
 const uploadRemote = async (key, config) => {
   const imageDir = await resolveImagePath(key, config);
-
-  new Promise(resolve => {
     AWS.config.loadFromPath('./aws-config.json')
     AWS.config.update({
       region: config.remoteRegion
@@ -138,8 +135,10 @@ const uploadRemote = async (key, config) => {
         'upload-remote',
         `${files.length} images to be uploaded to bucket: ${key}`
       );
+  }
 
-      files.forEach(file => {
+  return Promise.all(
+      files.map(file => {
         const fileStream = fs.createReadStream(file);
 
         fileStream.on('error', err => {
@@ -155,23 +154,13 @@ const uploadRemote = async (key, config) => {
           ContentType: contentType
         };
 
-        s3.putObject(uploadParams, (err, data) => {
-          if (err) {
-            logger.error(
-              'upload-remote',
-              `${path.basename(file)} : ❌  ${err}`
-            );
-          }
-          if (data) {
-            logger.info('upload-remote', `${path.basename(file)} : ✅`);
-          }
-        });
-      });
-    } else {
-      logger.info('upload-remote', 'No snapshots found - skipping');
-    }
-    resolve();
-  });
+      const putObjectPromise = s3.putObject(uploadParams).promise();
+
+      const promises = [];
+      promises.push(putObjectPromise);
+      return Promise.all(promises);
+    })
+  );
 };
 
 export {

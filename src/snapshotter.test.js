@@ -109,7 +109,7 @@ describe('The snapshotter', () => {
     const config = {
       gridUrl: 'https://lol.com',
       url: 'http://www.bellhelmets.com/',
-      label: 'homepage',
+      label: '1homepage',
       cookies: [
         {
           name: 'cookiename',
@@ -132,7 +132,7 @@ describe('The snapshotter', () => {
       gridUrl: 'https://lol.com',
       url: 'http://www.bellhelmets.com/',
       label: '1homepage',
-      onReadyScript: './src/__mocks__/seleniumMock.js'
+      onBeforeScript: './src/__mocks__/seleniumMock.js'
     };
 
     const mockSnapshot = new SnapShotter(config, { webdriver, By, until });
@@ -145,7 +145,6 @@ describe('The snapshotter', () => {
       gridUrl: 'https://lol.com',
       url: 'http://www.bellhelmets.com/',
       label: '1homepage',
-      onBeforeScript: './src/__mocks__/seleniumMock.js',
       onReadyScript: './src/__mocks__/seleniumMock.js'
     };
 
@@ -154,7 +153,7 @@ describe('The snapshotter', () => {
     expect(seleniumMock).toBeCalledWith(mockSnapshot.driver);
   });
 
-  it.only('Throws an error if incorrect script file is provided', async () => {
+  it('Throws an error if incorrect script file is provided', async () => {
     const config = {
       gridUrl: 'https://lol.com',
       url: 'http://www.bellhelmets.com/',
