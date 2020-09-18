@@ -31,8 +31,6 @@ const createBucket = async config => {
 const createComparisons = async (fs, config) => {
     const comparisonData = await comparisonDataConstructor(fs, config);
 
-    const reporter = new Reporter();
-
     for (let i = 0; i < comparisonData.length; i++) {
         const scenario = comparisonData[i];
         const equal = await isEqual(scenario);
@@ -71,12 +69,22 @@ const createDirectories = (fs, config) =>
         resolve();
     });
 
-const clearDirectory = (fs, config) => {
-    const diffsPath = path.resolve(config.generatedDiffs);
-    fs.readdirSync(diffsPath).forEach(file => {
-        fs.unlinkSync(`${diffsPath}/${file}`);
+const clearDirectories = (fs, config) =>
+    new Promise(resolve => {
+        const diffsPath = path.resolve(config.generatedDiffs);
+        const reportPath = path.resolve(config.report);
+        [diffsPath, reportPath].forEach(dir => {
+            const directoryExists = fs.existsSync(dir) ? true : false;
+
+            if (directoryExists) {
+                fs.readdirSync(dir).forEach(file => {
+                    fs.unlinkSync(`${dir}/${file}`);
+                });
+            }
+        });
+
+        resolve();
     });
-};
 
 const fetchRemoteComparisonImages = async config => {
     if (config.remote) {
@@ -103,6 +111,6 @@ export {
     createBucket,
     createComparisons,
     createDirectories,
-    clearDirectory,
+    clearDirectories,
     fetchRemoteComparisonImages
 };
