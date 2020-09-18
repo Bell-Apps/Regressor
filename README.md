@@ -51,6 +51,7 @@ Example config:
       {
         "url": "http://www.bellhelmets.com/",
         "label": "homepage",
+        "cropToSelector": ".flickity-slider", // crop the screenshot to a specific selector
         "removeSelectors": [".header-banner"],   // remove elements that are not static on refresh such as adverts
         "viewports": [{"height": 2400, "width": 1024, "label": "large"}],
         "cookies": [
