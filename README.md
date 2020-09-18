@@ -22,7 +22,8 @@ As you make changes to your site Regressor will take new images of your site
 
 Aye Spy will then compare the latest images against the baseline images.
 
-If there are differences the build fails. A report can be generated and gives you the opportunity to check the differences are expected.
+If there are differences the build fails and a report will be generated,
+This gives you the opportunity to check the differences are expected.
 
 If they are expected, update the baseline images
 
@@ -105,7 +106,3 @@ Set your latest screenshots as the baselines for future comparisons:
 Run the comparison between baseline and latest:
 
 `regressor compare --browser chrome --config config.json --remote`
-
-Generate the comparison report: 
-
-`regressor generate-report --browser chrome --config config.json --remote`
