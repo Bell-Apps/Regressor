@@ -182,7 +182,7 @@ describe('The snapshotter', () => {
         expect(logger.error.mock.calls.length).toBe(1);
     });
 
-    it('Returns the correct browser capabilities if mobile emulator is used', async () => {
+    it('Returns the mobile browser capabilities when called with a mobile emulator', async () => {
         const mockSnapshot = (SnapShotter.prototype.getMobileBrowserCapability = jest.fn());
         new SnapShotter(
             {
@@ -195,7 +195,7 @@ describe('The snapshotter', () => {
         expect(mockSnapshot.mock.call.length).toBe(1);
     });
 
-    it('Returns the correct browser capabilities if normal browser used', async () => {
+    it('Returns the desktop capabilities when called with a non-mobile browser', async () => {
         const mockSnapshot = (SnapShotter.prototype.getMobileBrowserCapability = jest.fn());
         new SnapShotter({
                 gridUrl: 'https://lol.com',
