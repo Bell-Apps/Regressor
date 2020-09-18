@@ -48,11 +48,26 @@ Example config:
             "value": "cookie_value"
           }
         ],
-        "waitForSelector": ["footer"]
+        "waitForSelector": ["footer"],
+        "onReadyScript": './scripts/clickSelector.js'
       }
     ]
   }
-  ```
+```
+
+## Custom Scripts
+
+For scenarios where you need to interact with the page before taking a screenshot, a custom script can be used which contains the selenium webdriver actions. The onReadyScript property takes a string path to the script to be executed.
+
+Example script:
+
+```
+const By = require('selenium-webdriver').By;
+const clickElement = async browser => {
+  await browser.findElement(By.css('#buttonId"]')).click();
+};
+module.exports = clickElement;
+```
 
 ## Running
 
