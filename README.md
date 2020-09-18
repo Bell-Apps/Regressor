@@ -87,8 +87,10 @@ Example script:
 
 ```
 const By = require('selenium-webdriver').By;
-const clickElement = async browser => {
-  await browser.findElement(By.css('#buttonId"]')).click();
+const landingPageNoErrors = async browser => {
+    await browser.wait(until.elementIsVisible(browser.findElement(By.css(utils.getFirstName()))), 10000);
+    await browser.findElement(By.id("firstName")).sendKeys("Warren");
+     await browser.findElement(By.css(".dob-day-option-field")).sendKeys("10");
 };
 module.exports = clickElement;
 ```
