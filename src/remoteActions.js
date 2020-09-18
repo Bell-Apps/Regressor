@@ -22,12 +22,42 @@ const createRemote = config => {
     GrantRead: 'true',
     GrantReadACP: 'true',
     GrantWrite: 'true',
-    GrantWriteACP: 'true'
+    GrantWriteACP: 'true',
+    CreateBucketConfiguration: {
+      LocationConstraint: config.remoteRegion
+    }
   };
 
   const createBucketPromise = s3.createBucket(params).promise();
   return createBucketPromise;
 }
+
+const updateRemotePolicy = config => {
+  AWS.config.update({ region: config.remoteRegion });
+  const s3 = new AWS.S3();
+  const Policy = `{
+    "Version": "2020-09-18",
+    "Id": "RegressorPolicy",
+    "Statement": [
+        {
+            "Sid": "Stmt1397633323327",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::${config.remoteBucketName}/*"
+        }
+    ]
+  }`;
+
+  const params = {
+    Bucket: config.remoteBucketName,
+    Policy
+  };
+
+  s3.putBucketPolicy(params).promise();
+};
 
 const deleteRemote = async (key, config) => {
   const filteredResults = await listRemote(key, config);
@@ -150,5 +180,6 @@ export {
   fetchRemote,
   listRemote,
   resolveImagePath,
-  uploadRemote
+  uploadRemote,
+  updateRemotePolicy
 };
