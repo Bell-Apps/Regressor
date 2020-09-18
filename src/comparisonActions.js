@@ -38,9 +38,9 @@ const createComparisons = async (fs, config) => {
         const equal = await isEqual(scenario);
 
         if (equal) {
-            reporter.pass(scenario.label);
+            Reporter.pass(scenario.label);
         } else {
-            reporter.fail(scenario.label);
+            Reporter.fail(scenario.label);
             await createDiffImage(scenario);
         }
     }
@@ -54,7 +54,7 @@ const createComparisons = async (fs, config) => {
                 logger.error('upload-remote', `Error uploading files ❌  ${error}`)
             );
 
-    reporter.generateReport();
+    Reporter.generateReport();
 };
 
 const createDirectories = (fs, config) =>

@@ -1,6 +1,6 @@
 import logger from './logger';
 
-export default class Reporter {
+class Reporter {
   constructor() {
     this._state = {
       passed: {
@@ -50,3 +50,5 @@ export default class Reporter {
     }
   }
 }
+
+export default new Reporter();
