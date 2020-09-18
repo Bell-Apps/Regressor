@@ -3,18 +3,18 @@
 import program from 'commander';
 import path from 'path';
 import fs from 'fs';
-import logger, { setupLogger } from '../logger';
+import logger, {setupLogger} from '../logger';
 import SnapShotter from '../snapshotter';
 import getScreenshots from '../getScreenshots';
 import updateBaselineShots from '../updateBaselineShots';
-import { generateLocalReport, generateRemoteReport } from '../generateReport';
-import { uploadRemoteKeys } from '../remoteActions';
+import {generateLocalReport, generateRemoteReport} from '../generateReport';
+import {uploadRemoteKeys} from '../remoteActions';
 import {
-  createBucket,
-  createComparisons,
-  createDirectories,
-  clearDirectory,
-  fetchRemoteComparisonImages
+    createBucket,
+    createComparisons,
+    createDirectories,
+    clearDirectory,
+    fetchRemoteComparisonImages
 } from '../comparisonActions';
 import validateConfig from '../configValidator';
 import Reporter from '../reporter';
@@ -22,13 +22,13 @@ import Reporter from '../reporter';
 setupLogger();
 
 function handleError(err) {
-  logger.error(
-      'run',
-      '☠️️️️️️️ ☠️ ️️️️️️☠️️️️️️️ ☠️️️️️️️ ☠️️️️️️️ ☠️️️ ERROR FOUND ☠️️️️️️️ ☠️️️️️️️ ☠️️️️️️️ ☠️️️️️️️ ☠️️️️️️️ ☠️️️'
-  );
-  console.error(err);
-  process.exitCode = 1;
-  process.exit();
+    logger.error(
+        'run',
+        '☠️️️️️️️ ☠️ ️️️️️️☠️️️️️️️ ☠️️️️️️️ ☠️️️️️️️ ☠️️️ ERROR FOUND ☠️️️️️️️ ☠️️️️️️️ ☠️️️️️️️ ☠️️️️️️️ ☠️️️️️️️ ☠️️️'
+    );
+    console.error(err);
+    process.exitCode = 1;
+    process.exit();
 }
 
 program
@@ -41,21 +41,21 @@ program
     .option('c, --config [config]', 'Path to your config')
     .option('r, --remote', 'Upload new baseline to remote storage')
     .action(async options => {
-      try {
-        const config = require(path.resolve(options.config)); // eslint-disable-line import/no-dynamic-require
+        try {
+            const config = require(path.resolve(options.config)); // eslint-disable-line import/no-dynamic-require
 
-        if (options.browser) config.browser = options.browser;
+            if (options.browser) config.browser = options.browser;
 
-        validateConfig(config, options.remote);
+            validateConfig(config, options.remote);
 
-        logger.info('run', 'Getting snapshots... 📸 ');
-        await createDirectories(fs, config);
-        await createBucket(config);
-        await getScreenshots(SnapShotter, config);
-        if (options.remote) await uploadRemoteKeys('latest', config);
-      } catch (err) {
-        handleError(err);
-      }
+            logger.info('run', 'Getting snapshots... 📸 ');
+            await createDirectories(fs, config);
+            await createBucket(config);
+            await getScreenshots(SnapShotter, config);
+            if (options.remote) await uploadRemoteKeys('latest', config);
+        } catch (err) {
+            handleError(err);
+        }
     });
 
 program
@@ -67,21 +67,21 @@ program
     .option('c, --config [config]', 'Path to your config')
     .option('r, --remote', 'Upload new baseline to remote storage')
     .action(async options => {
-      try {
-        const config = require(path.resolve(options.config)); // eslint-disable-line import/no-dynamic-require
+        try {
+            const config = require(path.resolve(options.config)); // eslint-disable-line import/no-dynamic-require
 
-        if (options.browser) config.browser = options.browser;
+            if (options.browser) config.browser = options.browser;
 
-        validateConfig(config, options.remote);
+            validateConfig(config, options.remote);
 
-        createDirectories(fs, config);
-        await updateBaselineShots(fs, config).catch(error => {
-          logger.error('run', error);
-        });
-        if (options.remote) await uploadRemoteKeys('baseline', config);
-      } catch (err) {
-        handleError(err);
-      }
+            createDirectories(fs, config);
+            await updateBaselineShots(fs, config).catch(error => {
+                logger.error('run', error);
+            });
+            if (options.remote) await uploadRemoteKeys('baseline', config);
+        } catch (err) {
+            handleError(err);
+        }
     });
 
 program
@@ -93,51 +93,33 @@ program
     .option('c, --config [config]', 'Path to your config')
     .option('r, --remote', 'Upload new baseline to remote storage')
     .action(async options => {
-      try {
-        const config = require(path.resolve(options.config)); // eslint-disable-line import/no-dynamic-require
+        try {
+            const config = require(path.resolve(options.config)); // eslint-disable-line import/no-dynamic-require
 
-        if (options.browser) config.browser = options.browser;
-        config.remote = options.remote;
-        validateConfig(config, options.remote);
+            if (options.browser) config.browser = options.browser;
+            config.remote = options.remote;
+            validateConfig(config, config.remote);
 
-        createDirectories(fs, config);
-        clearDirectory(fs, config);
-        await createBucket(config);
-        await fetchRemoteComparisonImages(config);
-        await createComparisons(fs, config);
+            createDirectories(fs, config);
+            clearDirectory(fs, config);
+            await createBucket(config);
+            await fetchRemoteComparisonImages(config);
+            await createComparisons(fs, config);
 
-        Reporter.state.failed.count > 0
-            ? (process.exitCode = 1)
-            : (process.exitCode = 0);
-      } catch (err) {
-        handleError(err);
-      }
-    });
+            if (Reporter.state.failed.count > 0) {
+                const generateReport = config.remote
+                    ? generateRemoteReport
+                    : generateLocalReport;
 
-program
-    .command('generate-report')
-    .option('c, --config [config]', 'Path to your config')
-    .option('r, --remote', 'Upload new baseline to remote storage')
-    .option(
-        '-b, --browser [browser]',
-        'Select the browser to run your tests on. E.G. chrome, firefox, etc.'
-    )
-    .action(options => {
-      try {
-        const config = require(path.resolve(options.config)); // eslint-disable-line import/no-dynamic-require
+                generateReport(config);
 
-        if (options.browser) config.browser = options.browser;
-
-        validateConfig(config, options.remote);
-
-        const generateReport = options.remote
-            ? generateRemoteReport
-            : generateLocalReport;
-
-        generateReport(config);
-      } catch (err) {
-        handleError(err);
-      }
+                process.exitCode = 1;
+            } else {
+                process.exitCode = 0;
+            }
+        } catch (err) {
+            handleError(err);
+        }
     });
 
 program.parse(process.argv);
