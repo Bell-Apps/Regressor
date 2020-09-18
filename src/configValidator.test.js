@@ -51,24 +51,7 @@ describe('The Config Validator', () => {
         expect(missingFields).toContain('remoteBucketName,remoteRegion');
     });
 
-    it('remote config returns false for missing aws credentials', () => {
-        delete process.env.AWS_SECRET_ACCESS_KEY;
-        delete process.env.AWS_ACCESS_KEY_ID;
-        const config = {
-            gridUrl: 'http://localhost:4444/wd/hub',
-            remoteBucketName: 'regressor',
-            remoteRegion: 'us-west-2'
-        };
-        expect(isRemoteConfigValid(config)).toBe(false);
-        const missingFields = logger.info.mock.calls[0][1];
-        expect(missingFields).toContain(
-            'remoteBucketName,remoteRegion,env variable: AWS_SECRET_ACCESS_KEY,env variable: AWS_ACCESS_KEY_ID'
-        );
-    });
-
     it('remote config returns true for valid configs', () => {
-        process.env.AWS_SECRET_ACCESS_KEY = 'test';
-        process.env.AWS_ACCESS_KEY_ID = 'test';
         const config = {
             remoteBucketName: 'regressor',
             remoteRegion: 'us-west-2'
@@ -78,7 +61,7 @@ describe('The Config Validator', () => {
 
     it('exits if the config is invalid', () => {
         const invalidConfig = {
-            gridUrl: 'http://selenium.com:4444/wd/hub',
+            gridUrl: 'http://localhost:4444/wd/hub',
             baseline: './e2eTests/generateHtmlReport/baseline',
             latest: './e2eTests/generateHtmlReport/latest',
             generatedDiffs: './e2eTests/generateHtmlReport/generatedDiffs',
