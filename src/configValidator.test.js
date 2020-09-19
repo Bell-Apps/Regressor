@@ -15,7 +15,7 @@ describe('The Config Validator', () => {
 
     it('local config returns false for invalid configs', () => {
         const config = {
-            gridUrl: 'http://selenium.com:4444/wd/hub'
+            gridUrl: 'http://localhost:4444/wd/hub'
         };
 
         expect(isLocalConfigValid(config)).toBe(false);
@@ -27,7 +27,7 @@ describe('The Config Validator', () => {
 
     it('local config returns true for valid configs', () => {
         const config = {
-            gridUrl: 'http://selenium.com:4444/wd/hub',
+            gridUrl: 'http://localhost:4444/wd/hub',
             baseline: './e2eTests/generateHtmlReport/baseline',
             latest: './e2eTests/generateHtmlReport/latest',
             generatedDiffs: './e2eTests/generateHtmlReport/generatedDiffs',
@@ -45,7 +45,7 @@ describe('The Config Validator', () => {
 
     it('remote config returns false for invalid configs', () => {
         const config = {
-            gridUrl: 'http://selenium.com:4444/wd/hub'
+            gridUrl: 'http://localhost:4444/wd/hub'
         };
         expect(isRemoteConfigValid(config)).toBe(false);
         const missingFields = logger.info.mock.calls[0][1];
@@ -84,7 +84,7 @@ describe('The Config Validator', () => {
         const config = {
             remoteBucketName: 'test',
             remoteRegion: 'test',
-            gridUrl: 'http://selenium.com:4444/wd/hub',
+            gridUrl: 'http://localhost:4444/wd/hub',
             baseline: './e2eTests/generateHtmlReport/baseline',
             latest: './e2eTests/generateHtmlReport/latest',
             generatedDiffs: './e2eTests/generateHtmlReport/generatedDiffs',

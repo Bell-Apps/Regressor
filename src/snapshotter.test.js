@@ -82,7 +82,7 @@ describe('The snapshotter', () => {
         const config = {
             gridUrl: 'https://lol.com',
             url: 'http://www.bellhelmets.com/',
-            label: 'homepage',
+            label: '1homepage',
             waitForSelector: 'selector'
         };
 
@@ -113,7 +113,7 @@ describe('The snapshotter', () => {
             gridUrl: 'https://lol.com',
             url: 'http://www.bellhelmets.com/',
             label: '1homepage',
-            cropToSelector: '.thisIsASelector'
+            cropToSelector: '.homepage-wrapper'
         };
 
         const mockSnapshot = new SnapShotter(config, { webdriver, By, until });
@@ -211,14 +211,15 @@ describe('The snapshotter', () => {
         expect(mockSnapshot.mock.calls.length).toBe(1);
     });
 
-    it('Returns the desktop capabilities when called with a non-mobile browser', async () => {
-        const mockSnapshot = (SnapShotter.prototype.getMobileBrowserCapability = jest.fn());
-        new SnapShotter({
-                gridUrl: 'https://lol.com',
-                browser: 'chrome'
-            },
-            {webdriver, By, until}
-        );
+  it('Returns the desktop capabilities when called with a non-mobile browser', async () => {
+    const mockSnapshot = (SnapShotter.prototype.getMobileBrowserCapability = jest.fn());
+    new SnapShotter(
+      {
+        gridUrl: 'https://lol.com',
+        browser: 'chrome'
+      },
+      { webdriver, By, until }
+    );
 
         expect(mockSnapshot.mock.calls.length).toBe(0);
     });

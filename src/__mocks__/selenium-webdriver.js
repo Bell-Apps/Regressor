@@ -37,6 +37,7 @@ class Builder {
         return wrap;
       },
       findElement: element => new Element(element),
+      setRect: jest.fn(),
       getRect: jest.fn(),
       get: jest.fn(),
       takeScreenshot: jest.fn().mockReturnValue('screenshot-data'),
