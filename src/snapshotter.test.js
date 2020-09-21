@@ -100,7 +100,7 @@ describe('The snapshotter', () => {
             gridUrl: 'https://lol.com',
             url: 'http://www.bellhelmets.com/',
             label: '1homepage',
-            removeSelectors: ['header', 'footer']
+            removeElements: ['header', 'footer']
         };
 
         const mockSnapshot = new SnapShotter(config, {webdriver, By, until});

@@ -10,7 +10,7 @@
     {
       "url": "http://www.bellhelmets.com/",
       "label": "homepage",
-      "removeSelectors": [".header-banner"],
+      "removeElements": [".header-banner"],
       "cookies": [
         {
           "name": "dw_dnt",
