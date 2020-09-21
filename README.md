@@ -129,3 +129,7 @@ To make your visual regression tests as robust as possible there are a few point
   - Dynamic elements: elements such as ads, videos, anything that moves should be removed using the `removeElements` array. You want your page under test to be static.
   - The application under test: Regressor is really effective when loading a page and screenshotting. You start to lose that benefit when you perform complicated setup journeys such as going through a checkout. Although possible with `onReadyScript` this should only be used for cases such as closing a cookie message. 
   - The selenium grid: We recommend using the container versions of selenium available from dockerhub. This ensures repeatable consistent state across test runs.
+  
+## Contributing
+
+[To contribute please checkout CONTRIBUTING](./CONTRIBUTING.md)
