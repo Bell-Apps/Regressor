@@ -8,7 +8,7 @@
   "remoteRegion": "es-west-2",
   "scenarios": [
     {
-      "url": "http://regressor_report:80",
+      "url": "http://regressor_report:4000",
       "label": "image",
       "viewports": [{"height": 2400, "width": 1024, "label": "large"}]
     }]
