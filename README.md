@@ -64,7 +64,7 @@ Example config to run Regressor:
             "value": "cookie_value"
           }
         ],
-        "waitForSelector": ["footer"],
+        "waitForElement": ["footer"],
         "onReadyScript": './scripts/clickSelector.js',
         "wait": 2000 // implicitly wait before taking a snap
       }
