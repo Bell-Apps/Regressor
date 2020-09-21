@@ -168,7 +168,7 @@ describe('The snapshotter', () => {
 
         const mockSnapshot = new SnapShotter(config, {webdriver, By, until});
         await mockSnapshot.takeSnap();
-        expect(seleniumMock).toBeCalledWith(mockSnapshot.driver);
+        expect(seleniumMock).toBeCalledWith(mockSnapshot.driver, By);
     });
 
     it('Executes the onReady script', async () => {
@@ -181,7 +181,7 @@ describe('The snapshotter', () => {
 
         const mockSnapshot = new SnapShotter(config, {webdriver, By, until});
         await mockSnapshot.takeSnap();
-        expect(seleniumMock).toBeCalledWith(mockSnapshot.driver);
+        expect(seleniumMock).toBeCalledWith(mockSnapshot.driver, By);
     });
 
     it('Throws an error if incorrect script file is provided', async () => {
