@@ -1,6 +1,6 @@
 {
   "name": "regressor",
-  "version": "1.6.2",
+  "version": "1.7.0",
   "description": "A visual regression tool",
   "main": "lib/bin/run.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "regressor": "lib/bin/run.js"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://npm.pkg.github.com/wgalyen"
   },
   "repository": "git+https://github.com/wgalyen/Regressor.git",
   "keywords": [
