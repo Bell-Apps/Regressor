@@ -116,7 +116,7 @@ Run the comparison between baseline and latest:
 
 Run a single scenario based on label name:
 
-`regressor snap --browser chrome --config config.json --remote --run scenarioName`
+`regressor snap --browser chrome --config config.json --remote --run "scenarioName"`
 
 ## Visual Regression Tips and Tricks
 
