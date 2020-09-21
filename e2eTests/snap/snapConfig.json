@@ -8,7 +8,7 @@
   "remoteRegion": "es-west-2",
   "scenarios": [
     {
-      "url": "https://www.bellhelmets.com/on/demandware.static/-/Sites-bellhelmets-Library/default/dw19f7907f/images/homepage/bell-motorcycle-helmets-1920x1080.jpg",
+      "url": "http://regressor_report:80",
       "label": "image",
       "viewports": [{"height": 2400, "width": 1024, "label": "large"}]
     }]
