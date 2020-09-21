@@ -82,16 +82,15 @@ Make sure to configure the bucket policy to allow viewing of objects.
 
 ## on Ready Script
 
-For scenarios where you need to interact with the page before taking a screenshot, a script can be run which has the [selenium-webdriver](https://github.com/SeleniumHQ/selenium/wiki/WebDriverJs) driver exposed. 
+For scenarios where you need to interact with the page before taking a screenshot, a script can be run which has the [selenium-webdriver](https://github.com/SeleniumHQ/selenium/wiki/WebDriverJs) driver and By exposed. 
 
 Example script:
 
 ```
-const By = require('selenium-webdriver').By;
-const landingPageNoErrors = async browser => {
+async function clickElement (browser, By) {
     await browser.wait(until.elementIsVisible(browser.findElement(By.css(utils.getFirstName()))), 10000);
     await browser.findElement(By.id("firstName")).sendKeys("Warren");
-     await browser.findElement(By.css(".dob-day-option-field")).sendKeys("10");
+    await browser.findElement(By.css(".dob-day-option-field")).sendKeys("10");
 };
 module.exports = clickElement;
 ```
