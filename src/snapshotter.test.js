@@ -1,6 +1,6 @@
 /* globals jest expect */
 import jimp from 'jimp';
-import webdriver, {By, until} from './__mocks__/selenium-webdriver';
+import webdriver, { By, until } from './__mocks__/selenium-webdriver';
 import SnapShotter from './snapshotter';
 import seleniumMock from './__mocks__/onReadyScriptMock';
 import logger from './logger';
@@ -65,7 +65,7 @@ describe('The snapshotter', () => {
         const config = {
             gridUrl: 'https://lol.com',
             url: 'http://www.bellhelmets.com/',
-            label: 'homepage',
+            label: '1homepage',
             waitForElement: 'selector'
         };
 
@@ -73,7 +73,7 @@ describe('The snapshotter', () => {
         await mockSnapshot.takeSnap();
         expect(mockSnapshot.driver.wait.mock.calls.length).toBe(1);
         expect(mockSnapshot.driver.wait).toBeCalledWith(
-            { _selector: config .waitForElement },
+            { _selector: config.waitForElement },
             10000
         );
     });
@@ -178,10 +178,7 @@ describe('The snapshotter', () => {
             onReadyScript: './src/__mocks__/onReadyScriptMock.js'
         };
 
-        const mockSnapshot = new SnapShotter(
-            config,
-            { webdriver, By, until }
-        );
+        const mockSnapshot = new SnapShotter(config, { webdriver, By, until });
         await mockSnapshot.takeSnap();
         expect(seleniumMock).toBeCalledWith(mockSnapshot.driver, By);
     });
@@ -207,45 +204,22 @@ describe('The snapshotter', () => {
                 gridUrl: 'https://lol.com',
                 mobileDeviceName: 'test'
             },
-            { webdriver, By, until },
-            onComplete
+            { webdriver, By, until }
         );
 
         expect(mockSnapshot.mock.calls.length).toBe(1);
     });
 
-  it('Returns the desktop capabilities when called with a non-mobile browser', async () => {
-    const mockSnapshot = (SnapShotter.prototype.getMobileBrowserCapability = jest.fn());
-    new SnapShotter(
-      {
-        gridUrl: 'https://lol.com',
-        browser: 'chrome'
-      },
-        { webdriver, By, until }
-    );
+    it('Returns the desktop capabilities when called with a non-mobile browser', async () => {
+        const mockSnapshot = (SnapShotter.prototype.getMobileBrowserCapability = jest.fn());
+        new SnapShotter(
+            {
+                gridUrl: 'https://lol.com',
+                browser: 'chrome'
+            },
+            { webdriver, By, until }
+        );
 
         expect(mockSnapshot.mock.calls.length).toBe(0);
-    });
-
-    it('runs the on-complete callback after an error screenshot', async () => {
-        const mockOnComplete = jest.fn();
-
-        SnapShotter.prototype.executeScript = () => {
-            throw new Error('sad');
-        };
-
-        try {
-            await new SnapShotter(
-                {
-                    gridUrl: 'https://lol.com',
-                    browser: 'chrome',
-                    onBeforeScript: 'willthrow'
-                },
-                { webdriver, By, until },
-                mockOnComplete
-            ).takeSnap();
-        } finally {
-            expect(mockOnComplete.mock.calls.length).toBe(1);
-        }
     });
 });
