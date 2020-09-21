@@ -51,6 +51,7 @@ Example config to run Regressor:
     "report": "./reports",
     "remoteBucketName": "regressor-example",
     "remoteRegion": "us-west-1",
+    "limitAmountOfParallelScenarios": 10, // if you are killing your selenium grid use this to batch up scenarios
     "scenarios": [
       {
         "url": "http://www.bellhelmets.com/",
