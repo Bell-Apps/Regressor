@@ -23,4 +23,6 @@ e2eTests/updateBaseline/baseline/*
 e2eTests/snap/latest/*
 e2eTests/compare/generatedDiffs/*
 
+e2eTests/removeElements/latestMockImages/*
+
 aws-config.json
