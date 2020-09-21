@@ -34,9 +34,13 @@ In order to get the most out of Regressor we recommend
   - Using the [selenium images from docker hub](https://hub.docker.com/u/selenium/) for consistent repeatable state 
   - Cloud storage (currently supporting Amazon S3)
 
-Create an S3 bucket to store your images. It will also need to have the correct permissions set up.
+To install the package:
+`npm i -g regressor`
 
-Example config:
+
+    regressor init 
+
+Example config to run Regressor:
 
 ```
 {

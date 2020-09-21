@@ -24,6 +24,9 @@
   "bin": {
     "regressor": "lib/bin/run.js"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "repository": "git+https://github.com/wgalyen/Regressor.git",
   "keywords": [
     "visual-regression",
@@ -37,6 +40,7 @@
   },
   "homepage": "https://github.com/wgalyen/Regressor#readme",
   "dependencies": {
+    "inquirer": "6.2.0",
     "aws-sdk": "^2.252.1",
     "commander": "^2.15.1",
     "jimp": "^0.5.3",
