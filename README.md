@@ -108,7 +108,7 @@ For scenarios where you need to use a mobile emulator, pass in the device name t
 
 Take the latest screenshots for comparison:
 
-`regressor snap --browser chrome --config config.json --remote`
+`regressor snap --browser chrome --config config.json --remote --subfolder folder`
 
 Set your latest screenshots as the baselines for future comparisons:
 
@@ -116,7 +116,7 @@ Set your latest screenshots as the baselines for future comparisons:
 
 Run the comparison between baseline and latest:
 
-`regressor compare --browser chrome --config config.json --remote`
+`regressor compare --browser chrome --config config.json --remote --subfolder folder`
 
 Run a single scenario based on label name:
 

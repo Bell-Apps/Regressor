@@ -34,7 +34,7 @@ describe('Remote interactions', () => {
       await resolveImagePath('', config);
     } catch (error) {
       expect(error).toEqual(
-        'The key did not match any of the available options'
+          'The key did not match any of the available options'
       );
     }
   });
@@ -43,7 +43,8 @@ describe('Remote interactions', () => {
     const key = 'latest';
     const data = await listRemoteKeys(key, {
       remoteRegion: 'region',
-      browser: 'chrome'
+      browser: 'chrome',
+      subfolder: 'subfolder'
     });
     expect(data.every(obj => obj.Key.includes(key))).toBe(true);
     expect(data.every(obj => !obj.Key.includes('baseline'))).toBe(true);
@@ -53,7 +54,8 @@ describe('Remote interactions', () => {
     const key = 'latest';
     const data = await deleteRemoteKeys(key, {
       remoteRegion: 'region',
-      browser: 'chrome'
+      browser: 'chrome',
+      subfolder: 'subfolder'
     });
     expect(data.every(obj => obj.Key.includes(key))).toBe(true);
     expect(data.every(obj => !obj.Key.includes('baseline'))).toBe(true);
