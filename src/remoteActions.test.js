@@ -49,11 +49,33 @@ describe('Remote interactions', () => {
     expect(data.every(obj => !obj.Key.includes('baseline'))).toBe(true);
   });
 
+  it('lists and filters remote objects with branch folder', async () => {
+    const key = 'latest';
+    const data = await listRemoteKeys(key, {
+      remoteRegion: 'region',
+      browser: 'chrome',
+      branch: 'branch'
+    });
+    expect(data.every(obj => obj.Key.includes(key))).toBe(true);
+    expect(data.every(obj => !obj.Key.includes('baseline'))).toBe(true);
+  });
+
   it('deletes filtered remote objects', async () => {
     const key = 'latest';
     const data = await deleteRemoteKeys(key, {
       remoteRegion: 'region',
       browser: 'chrome'
+    });
+    expect(data.every(obj => obj.Key.includes(key))).toBe(true);
+    expect(data.every(obj => !obj.Key.includes('baseline'))).toBe(true);
+  });
+
+  it('deletes filtered remote objects with branch folder', async () => {
+    const key = 'latest';
+    const data = await deleteRemoteKeys(key, {
+      remoteRegion: 'region',
+      browser: 'chrome',
+      branch: 'branch'
     });
     expect(data.every(obj => obj.Key.includes(key))).toBe(true);
     expect(data.every(obj => !obj.Key.includes('baseline'))).toBe(true);
