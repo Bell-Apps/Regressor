@@ -131,6 +131,10 @@ To make your visual regression tests as robust as possible there are a few point
   - The application under test: Regressor is really effective when loading a page and screenshotting. You start to lose that benefit when you perform complicated setup journeys such as going through a checkout. Although possible with `onReadyScript` this should only be used for cases such as closing a cookie message. 
   - The selenium grid: We recommend using the container versions of selenium available from dockerhub. This ensures repeatable consistent state across test runs.
   
+## Limitations 
+
+As of yet Regressor does not support switching contexts to iFrames
+  
 ## Running All Regressor Tests
 
 Regressor comes packaged up with a comprehensive set of tests adhering to the test pyramid to give a high level of confidence that the application is working as expected.
