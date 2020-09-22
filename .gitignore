@@ -27,4 +27,10 @@ e2eTests/firefox/removeElements/latest/*
 e2eTests/chrome/zeroOpacityElements/latest/*
 e2eTests/firefox/zeroOpacityElements/latest/*
 
+# live test folders
+baseline/
+latest/
+generatedDiffs/
+report/
+
 aws-config.json

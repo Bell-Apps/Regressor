@@ -1,0 +1,66 @@
+{
+    "gridUrl": "http://localhost:4444/wd/hub",
+    "baseline": "./baseline",
+    "latest": "./latest",
+    "generatedDiffs": "./generatedDiffs",
+    "report": "./report",
+    "scenarios": [
+        {
+            "url": "http://www.bellhelmets.com/",
+            "label": "homepage",
+            "viewports": [{"height": 2400, "width": 1024, "label": "large"},{"height": 2400, "width": 500, "label": "mobile"}],
+            "removeElements": [".header-banner"],
+            "cookies": [
+                {
+                    "name": "dw_dnt",
+                    "value": "1"
+                }
+            ]
+        },
+        {
+            "url": "http://www.bellhelmets.com/bike/",
+            "label": "category-bike",
+            "removeElements": ["#ad-header", ".AD"],
+            "viewports": [{"height": 2400, "width": 1024, "label": "large"},{"height": 2400, "width": 500, "label": "mobile"}],
+            "cookies": [
+                {
+                    "name": "dw_dnt",
+                    "value": "1"
+                }
+            ]
+        },{
+            "url": "http://www.bellhelmets.com/motorcycle/",
+            "label": "category-motorcycle",
+            "removeElements": [".header-banner"],
+            "viewports": [{"height": 2400, "width": 1024, "label": "large"},{"height": 2400, "width": 500, "label": "mobile"}],
+            "cookies": [
+                {
+                    "name": "dw_dnt",
+                    "value": "1"
+                }
+            ]
+        },{
+            "url": "http://www.bellhelmets.com/community/",
+            "label": "community",
+            "viewports": [{"height": 2400, "width": 1024, "label": "large"},{"height": 2400, "width": 500, "label": "mobile"}],
+            "removeElements": [".header-banner"],
+            "cookies": [
+                {
+                    "name": "dw_dnt",
+                    "value": "1"
+                }
+            ]
+        },{
+            "url": "http://www.bellhelmets.com/technology/",
+            "label": "technology",
+            "viewports": [{"height": 2400, "width": 1024, "label": "large"},{"height": 2400, "width": 500, "label": "mobile"}],
+            "removeElements": [".header-banner"],
+            "cookies": [
+                {
+                    "name": "dw_dnt",
+                    "value": "1"
+                }
+            ]
+        }
+    ]
+}
