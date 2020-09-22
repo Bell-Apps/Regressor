@@ -9,6 +9,7 @@ jest.mock('fs');
 jest.mock('jimp');
 
 const onComplete = () => {};
+const onError = () => {};
 
 describe('The snapshotter', () => {
     afterEach(() => {
@@ -25,7 +26,8 @@ describe('The snapshotter', () => {
         const mockSnapshot = new SnapShotter(
             config,
             { webdriver, By, until },
-            onComplete
+            onComplete,
+            onError
         );
         await mockSnapshot.takeSnap();
 
@@ -41,7 +43,8 @@ describe('The snapshotter', () => {
         const mockSnapshot = new SnapShotter(
             config,
             { webdriver, By, until },
-            onComplete
+            onComplete,
+            onError
         );
         await mockSnapshot.takeSnap();
         expect(mockSnapshot.driver.setRect).toBeCalledWith({
@@ -57,7 +60,8 @@ describe('The snapshotter', () => {
                 browser: 'firefox'
             },
             { webdriver, By, until },
-            onComplete
+            onComplete,
+            onError
         );
 
         new SnapShotter(
@@ -66,7 +70,8 @@ describe('The snapshotter', () => {
                 browser: 'chrome'
             },
             { webdriver, By, until },
-            onComplete
+            onComplete,
+            onError
         );
 
         expect(webdriver.Capabilities.chrome.mock.calls.length).toBe(1);
@@ -84,7 +89,8 @@ describe('The snapshotter', () => {
         const mockSnapshot = new SnapShotter(
             config,
             { webdriver, By, until },
-            onComplete
+            onComplete,
+            onError
         );
         await mockSnapshot.takeSnap();
         expect(mockSnapshot.driver.wait.mock.calls.length).toBe(1);
@@ -105,7 +111,8 @@ describe('The snapshotter', () => {
         await new SnapShotter(
             config,
             { webdriver, By, until },
-            onComplete
+            onComplete,
+            onError
         ).takeSnap();
 
         expect(jimp.read).toHaveBeenCalled();
@@ -126,7 +133,8 @@ describe('The snapshotter', () => {
         const mockSnapshot = new SnapShotter(
             config,
             { webdriver, By, until },
-            onComplete
+            onComplete,
+            onError
         );
         await mockSnapshot.takeSnap();
         expect(mockSnapshot.driver.quit.mock.calls.length).toBe(1);
@@ -143,7 +151,8 @@ describe('The snapshotter', () => {
         const mockSnapshot = new SnapShotter(
             config,
             { webdriver, By, until },
-            onComplete
+            onComplete,
+            onError
         );
         await mockSnapshot.takeSnap();
         expect(mockSnapshot.driver.executeScript.mock.calls.length).toBe(2);
@@ -161,7 +170,8 @@ describe('The snapshotter', () => {
         const mockSnapshot = new SnapShotter(
             config,
             { webdriver, By, until },
-            onComplete
+            onComplete,
+            onError
         );
         mockSnapshot.snooze = jest.fn();
         await mockSnapshot.takeSnap();
@@ -188,7 +198,8 @@ describe('The snapshotter', () => {
         const mockSnapshot = new SnapShotter(
             config,
             { webdriver, By, until },
-            onComplete
+            onComplete,
+            onError
         );
         await mockSnapshot.takeSnap();
         expect(mockSnapshot.driver.addCookie.mock.calls.length).toBe(2);
@@ -205,7 +216,8 @@ describe('The snapshotter', () => {
         const mockSnapshot = new SnapShotter(
             config,
             { webdriver, By, until },
-            onComplete
+            onComplete,
+            onError
         );
         await mockSnapshot.takeSnap();
         expect(seleniumMock).toBeCalledWith(mockSnapshot.driver, By);
@@ -222,7 +234,8 @@ describe('The snapshotter', () => {
         const mockSnapshot = new SnapShotter(
             config,
             { webdriver, By, until },
-            onComplete
+            onComplete,
+            onError
         );
         await mockSnapshot.takeSnap();
         expect(seleniumMock).toBeCalledWith(mockSnapshot.driver, By);
@@ -240,7 +253,8 @@ describe('The snapshotter', () => {
         const mockSnapshot = new SnapShotter(
             config,
             { webdriver, By, until },
-            onComplete
+            onComplete,
+            onError
         );
         await mockSnapshot.takeSnap();
         expect(logger.error.mock.calls.length).toBe(1);
@@ -254,7 +268,8 @@ describe('The snapshotter', () => {
                 mobileDeviceName: 'test'
             },
             { webdriver, By, until },
-            onComplete
+            onComplete,
+            onError
         );
 
         expect(mockSnapshot.mock.calls.length).toBe(1);
@@ -268,14 +283,15 @@ describe('The snapshotter', () => {
                 browser: 'chrome'
             },
             { webdriver, By, until },
-            onComplete
+            onComplete,
+            onError
         );
 
         expect(mockSnapshot.mock.calls.length).toBe(0);
     });
 
-    it('runs the on-complete callback after an error screenshot', async () => {
-        const mockOnComplete = jest.fn();
+    it('runs the onError callback after an error screenshot', async () => {
+        const mockOnError = jest.fn();
 
         SnapShotter.prototype.executeScript = () => {
             throw new Error('sad');
@@ -289,7 +305,25 @@ describe('The snapshotter', () => {
                     onBeforeScript: 'willthrow'
                 },
                 { webdriver, By, until },
-                mockOnComplete
+                onComplete,
+                mockOnError
+            ).takeSnap();
+        } finally {
+            expect(mockOnError.mock.calls.length).toBe(1);
+        }
+    });
+
+    it('runs the on-complete callback after finishing snapping', async () => {
+        const mockOnComplete = jest.fn();
+        try {
+            await new SnapShotter(
+                {
+                    gridUrl: 'https://lol.com',
+                    browser: 'chrome'
+                },
+                { webdriver, By, until },
+                mockOnComplete,
+                onError
             ).takeSnap();
         } finally {
             expect(mockOnComplete.mock.calls.length).toBe(1);
