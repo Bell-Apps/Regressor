@@ -139,13 +139,15 @@ To make your visual regression tests as robust as possible there are a few point
   
 ## Running Regressor on specific branch
 
-For running Regressor on different braches can be usefull during CI process when results data need to be saved for each Branch/PR there is another parameter `--branch` You can easily create a subfolder for each run of the tests without overwriting the latest data and reports. Note that this action creates extra folders with data on the S3 bucket so it is recommended to set up a policy for deleting unnecessary data.
+Running Regressor on branches will enable you to catch issues sooner. To do this you can specify the `--branch` parameter, which will create a subdirectory for your branch, allowing you to test independently of other branches.
 
-Take the latest screenshots for comparison on specific branch:
+*Note: this option creates extra directories containing screenshots on your S3 bucket, so it is recommended to set up a lifecycle policy to delete these when you are done with them.*
+
+Take the latest screenshots for comparison on a specific branch:
 
 `regressor snap --browser chrome --config config.json --remote --branch branchName`
 
-Run the comparison between baseline and latest on specific branch:
+Run the comparison between baseline and latest on a specific branch:
 
 `regressor compare --browser chrome --config config.json --remote --branch branchName`
 
