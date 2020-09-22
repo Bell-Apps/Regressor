@@ -3,7 +3,7 @@
 import { execSync } from 'child_process';
 import path from 'path';
 import fs from 'fs';
-import config from './zeroOpacityElementsConfig';
+import config from './hideElementsConfig';
 
 function cleanState(dir) {
     console.log('CLEANING STATE');
@@ -14,25 +14,23 @@ function cleanState(dir) {
     }
 }
 
-describe('e2e Tests zero opacity elements', () => {
+describe('e2e Tests hide elements', () => {
     let latestMockImagesPath;
 
     beforeEach(() => {
         latestMockImagesPath = path.resolve(config.latest);
-
-        //cleanState(latestMockImagesPath);
     });
 
-    it('set zero opacity elements from webpage and compares', () => {
+    it('hides elements using zero opacity', () => {
         let exitCode = 0;
 
         try {
             const snapOutput = execSync(
-                'node ./lib/bin/run.js snap --browser chrome --config e2eTests/chrome/zeroOpacityElements/zeroOpacityElementsConfig.json'
+                'node ./lib/bin/run.js snap --browser chrome --config e2eTests/chrome/hideElements/hideElementsConfig.json'
             ).toString();
             console.log(snapOutput);
             const compareOutput = execSync(
-                'node ./lib/bin/run.js compare --browser chrome --config e2eTests/chrome/zeroOpacityElements/zeroOpacityElementsConfig.json'
+                'node ./lib/bin/run.js compare --browser chrome --config e2eTests/chrome/hideElements/hideElementsConfig.json'
             ).toString();
             console.log(compareOutput);
         } catch (err) {

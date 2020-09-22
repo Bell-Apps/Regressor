@@ -149,11 +149,12 @@ describe('The snapshotter', () => {
         expect(mockSnapshot.driver.executeScript.mock.calls.length).toBe(2);
     });
 
-    it('implicitly waits if specified', async () => {
+    it('Hides Selectors', async () => {
         const config = {
             gridUrl: 'https://lol.com',
-            url: 'http://www.belhelmets.com/',
+            url: 'http://test.com/',
             label: '1homepage',
+            hideElements: ['selector1', 'selector2'],
             wait: 2000
         };
 
