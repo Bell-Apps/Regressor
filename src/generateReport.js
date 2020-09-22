@@ -45,17 +45,32 @@ const createReportData = config => {
   return report;
 };
 const createRemoteReportData = (url, diffs) =>
-  diffs.map(diff => {
-    const [browser, key, scenario] = diff.Key.split('/'); //eslint-disable-line no-unused-vars
-    const scenarioName = scenario.split('.png')[0];
+    diffs.map(diff => {
+      const params = {};
+      if (diff.Key.split('/').length === 3) {
+        [params.browser, params.key, params.scenario] = diff.Key.split('/');
+      } else {
+        [
+          params.browser,
+          params.branch,
+          params.key,
+          params.scenario
+        ] = diff.Key.split('/');
+      }
 
-    return {
-      label: scenarioName,
-      baseline: `${url}${browser}/baseline/${scenario}`,
-      latest: `${url}${browser}/latest/${scenario}`,
-      generatedDiff: `${url}${browser}/generatedDiffs/${scenario}`
-    };
-  });
+      const scenarioName = params.scenario.split('.png')[0];
+      let dir = `${params.browser}`;
+      if (params.branch) {
+        dir += `/${params.branch}`;
+      }
+
+      return {
+        label: scenarioName,
+        baseline: `${url}${params.browser}/baseline/${params.scenario}`,
+        latest: `${url}${dir}/latest/${params.scenario}`,
+        generatedDiff: `${url}${dir}/generatedDiffs/${params.scenario}`
+      };
+    });
 
 const generateLocalReport = async config =>
     writeReport(config, createReportData(config));
