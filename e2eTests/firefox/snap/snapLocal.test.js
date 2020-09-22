@@ -3,7 +3,7 @@
 import path from 'path';
 import fs from 'fs';
 import { execSync } from 'child_process';
-import config from './snapConfig';
+import config from '../../chrome/snap/snapConfig.json';
 
 describe('e2e Tests taking snaps locally', () => {
   let dirPath;
@@ -23,7 +23,7 @@ describe('e2e Tests taking snaps locally', () => {
 
     try {
       const stdout = execSync(
-        'node ./lib/bin/run.js snap --browser firefox --config e2eTests/snap/snapConfig.json'
+          'node ./lib/bin/run.js snap --browser firefox --config e2eTests/firefox/snap/snapConfig.json'
       ).toString();
       //pipe stdout to Jest console
       console.log(stdout);

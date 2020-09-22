@@ -1,11 +1,11 @@
 {
   "gridUrl": "http://localhost:4444/wd/hub",
-  "baseline": "./e2eTests/snap/baseline",
-  "latest": "./e2eTests/snap/latest",
-  "generatedDiffs": "./e2eTests/snap/generatedDiffs",
-  "report": "./e2eTests/reports",
+  "baseline": "./e2eTests/chrome/snap/baseline",
+  "latest": "./e2eTests/chrome/snap/latest",
+  "generatedDiffs": "./e2eTests/chrome/snap/generatedDiffs",
+  "report": "./e2eTests/chrome/snap/reports",
   "remoteBucketName": "regressor",
-  "remoteRegion": "es-west-2",
+  "remoteRegion": "us-west-2",
   "scenarios": [
     {
       "url": "http://regressor_report:4000",

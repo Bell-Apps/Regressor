@@ -1,7 +1,7 @@
 {
   "gridUrl": "http://localhost:4444/wd/hub",
   "baseline": "./baseline",
-  "latest": "./e2eTests/updateBaseline/mockImages",
+  "latest": "./e2eTests/generic/updateBaseline/mockImages",
   "generatedDiffs": "./generatedDiffs",
   "report": "./reports",
   "remoteBucketName": "regressor-e2e-tests-my-bucket",

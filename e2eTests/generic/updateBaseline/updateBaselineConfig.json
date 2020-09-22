@@ -1,9 +1,9 @@
 {
   "gridUrl": "http://localhost:4444/wd/hub",
-  "baseline": "./e2eTests/updateBaseline/baseline",
-  "latest": "./e2eTests/updateBaseline/mockImages",
-  "generatedDiffs": "./e2eTests/generatedDiffs",
-  "report": "./e2eTests/reports",
+  "baseline": "./e2eTests/generic/updateBaseline/baseline",
+  "latest": "./e2eTests/generic/updateBaseline/mockImages",
+  "generatedDiffs": "./e2eTests/generic/updateBaseline/generatedDiffs",
+  "report": "./e2eTests/generic/updateBaseline/reports",
   "remoteBucketName": "bell-regressor",
   "remoteRegion": "us-west-2",
   "scenarios": [

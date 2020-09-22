@@ -3,7 +3,7 @@
 import { execSync } from 'child_process';
 import path from 'path';
 import fs from 'fs';
-import config from './compareConfig';
+import config from './compareConfig.json';
 
 function cleanState(dir) {
   if (fs.existsSync(dir)) {
@@ -28,7 +28,7 @@ describe('e2e Tests compare shots locally', () => {
   it('Compares the latest images with the baseline images and generate a report', () => {
     try {
       execSync(
-          'node ./lib/bin/run.js compare --browser firefox --config e2eTests/compare/compareConfig.json'
+          'node ./lib/bin/run.js compare --browser chrome --config e2eTests/generic/compare/compareConfig.json'
       ).toString();
     } catch (err) {
       expect(err.status).toBe(1);

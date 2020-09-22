@@ -1,0 +1,15 @@
+{
+  "gridUrl": "http://hub:4444/wd/hub",
+  "baseline": "./e2eTests/firefox/removeElements/baseline",
+  "latest": "./e2eTests/firefox/removeElements/latest",
+  "generatedDiffs": "./e2eTests/firefox/removeElements/generatedDiffs",
+  "report": "./e2eTests/firefox/removeElements/reports",
+  "scenarios": [
+    {
+      "url": "http://regressor_report:4000",
+      "label": "remove-element",
+      "viewports": [{"height": 2400, "width": 1024, "label": "large"}],
+      "removeElements": [".screenshot"]
+    }
+  ]
+}

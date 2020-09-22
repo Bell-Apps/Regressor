@@ -1,0 +1,15 @@
+{
+  "gridUrl": "http://hub:4444/wd/hub",
+  "baseline": "./e2eTests/firefox/snap/baseline",
+  "latest": "./e2eTests/firefox/snap/latest",
+  "generatedDiffs": "./e2eTests/firefox/snap/generatedDiffs",
+  "report": "./e2eTests/firefox/snap/reports",
+  "remoteBucketName": "regressor",
+  "remoteRegion": "es-west-2",
+  "scenarios": [
+    {
+      "url": "http://regressor_report:4000",
+      "label": "image",
+      "viewports": [{"height": 2400, "width": 1024, "label": "large"}]
+    }]
+}
