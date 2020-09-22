@@ -33,30 +33,20 @@ function handleError(err) {
 }
 
 program
-    .version('0.0.1')
-    .command('snap')
-    .option(
-        '-b, --browser [browser]',
-        'Select the browser to run your tests on. E.G. chrome, firefox, etc.'
-    )
-    .option('c, --config [config]', 'Path to your config')
-    .option('--run [optional]', 'Filter scenarios based on label name')
-    .option('r, --remote', 'Upload new baseline to remote storage')
-    .option(
-        'sf, --subfolder [subfolder]',
-        'Specific folder for generating reports'
-    )
-    .action(async options => {
-        try {
-            const config = require(path.resolve(options.config)); // eslint-disable-line import/no-dynamic-require
+  .version('0.0.1')
+  .command('snap')
+  .option(
+    '-b, --browser [browser]',
+    'Select the browser to run your tests on. E.G. chrome, firefox, etc.'
+  )
+  .option('c, --config [config]', 'Path to your config')
+  .option('--run [optional]', 'Filter scenarios based on label name')
+  .option('r, --remote', 'Upload new baseline to remote storage')
+  .action(async options => {
+    try {
+      const config = require(path.resolve(options.config)); // eslint-disable-line import/no-dynamic-require
 
-            if (options.browser) config.browser = options.browser;
-
-            if (options.subfolder) {
-                config.subfolder = options.subfolder;
-            } else {
-                config.subfolder = 'default';
-            }
+      if (options.browser) config.browser = options.browser;
 
             validateConfig(config, options.remote);
 
@@ -107,28 +97,20 @@ program
     });
 
 program
-    .command('compare')
-    .option(
-        '-b, --browser [browser]',
-        'Select the browser to run your tests on. E.G. chrome, firefox, etc.'
-    )
-    .option('c, --config [config]', 'Path to your config')
-    .option('--run [optional]', 'Filter scenarios based on label name')
-    .option('r, --remote', 'Upload new baseline to remote storage')
-    .option(
-        'sf, --subfolder [subfolder]',
-        'Specific folder for generating reports'
-    )
-    .action(async options => {
-        try {
-            const config = require(path.resolve(options.config)); // eslint-disable-line import/no-dynamic-require
+  .command('compare')
+  .option(
+    '-b, --browser [browser]',
+    'Select the browser to run your tests on. E.G. chrome, firefox, etc.'
+  )
+  .option('c, --config [config]', 'Path to your config')
+  .option('--run [optional]', 'Filter scenarios based on label name')
+  .option('r, --remote', 'Upload new baseline to remote storage')
+  .action(async options => {
+    try {
+      const config = require(path.resolve(options.config)); // eslint-disable-line import/no-dynamic-require
+      const reporter = new Reporter();
 
-            if (options.browser) config.browser = options.browser;
-            if (options.subfolder) {
-                config.subfolder = options.subfolder;
-            } else {
-                config.subfolder = 'default';
-            }
+      if (options.browser) config.browser = options.browser;
 
             config.remote = options.remote;
             validateConfig(config, config.remote);
@@ -139,9 +121,9 @@ program
             clearDirectories(fs, config);
             await createBucket(config);
             await fetchRemoteComparisonImages(config);
-            await createComparisons(fs, config);
+            await createComparisons(fs, config, reporter);
 
-            if (Reporter.state.failed.count) {
+            if (reporter.state.failed.count) {
                 const generateReport = config.remote
                     ? generateRemoteReport
                     : generateLocalReport;

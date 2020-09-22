@@ -18,7 +18,6 @@ export default class SnapShotter {
             cookies,
             cropToSelector,
             removeElements,
-            zeroOpacityElements,
             waitForElement,
             wait,
             url = 'http://localhost:80',
@@ -39,7 +38,6 @@ export default class SnapShotter {
         this._cookies = cookies;
         this._cropToSelector = cropToSelector;
         this._removeElements = removeElements;
-        this._zeroOpacityElements = zeroOpacityElements;
         this._waitForElement = waitForElement;
         this._url = url;
         this.wait = wait;
@@ -86,21 +84,11 @@ export default class SnapShotter {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    async removeTheSelectors() {
-        for (let i = 0; i < this._removeElements.length; i++) {
-            const script = `document.querySelectorAll('${
-                this._removeElements[i]
-            }').forEach(element => element.remove())`;
-
-            await this.driver.executeScript(script);
-        }
-    }
-
-    async zeroOpacitySelectors() {
-        for (let i = 0; i < this._zeroOpacityElements.length; i++) {
-            const script = `document.querySelectorAll('${
-                this._zeroOpacityElements[i]
-            }').forEach(element => element.style.opacity = '0')`;
+  async removeTheSelectors() {
+    for (let i = 0; i < this._removeElements.length; i++) {
+      const script = `document.querySelectorAll('${
+        this._removeElements[i]
+      }').forEach(element => element.remove())`;
 
             await this.driver.executeScript(script);
         }
@@ -200,9 +188,7 @@ export default class SnapShotter {
 
             if (this._onReadyScript) await this.executeScript(this._onReadyScript);
 
-            if (this._zeroOpacityElements) await this.zeroOpacitySelectors();
-
-            if (this._removeElements) await this.removeTheSelectors();
+      if (this._removeElements) await this.removeTheSelectors();
 
             if (this.wait) await this.snooze(this.wait);
 

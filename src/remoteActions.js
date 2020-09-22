@@ -133,15 +133,15 @@ const listRemoteKeys = (key, config) => {
     const s3 = new AWS.S3();
     const params = { Bucket: config.remoteBucketName };
 
-    return s3
-        .listObjectsV2(params)
-        .promise()
-        .then(result => {
-            return result.Contents.filter(item =>
-                item.Key.includes(`${config.browser}/${config.subfolder}/${key}`)
-            );
-        })
-        .catch(err => logger.error('remote-actions', err));
+  return s3
+    .listObjectsV2(params)
+    .promise()
+    .then(result => {
+      return result.Contents.filter(item =>
+        item.Key.includes(`${config.browser}/${key}`)
+      );
+    })
+    .catch(err => logger.error('remote-actions', err));
 };
 
 const uploadRemoteKeys = async (key, config) => {
@@ -169,20 +169,17 @@ const uploadRemoteKeys = async (key, config) => {
 
             const contentType = key === 'report' ? 'text/html' : 'image/png';
 
-            let dir = `${config.browser}/${config.subfolder}`;
-            if (key === 'baseline') dir = `${config.browser}`;
+      logger.info(
+        'remote-actions',
+        `Uploading to S3: ${config.browser}/${key}/${path.basename(file)}`
+      );
 
-            logger.info(
-                'remote-actions',
-                `Uploading to S3: ${dir}/${key}/${path.basename(file)}`
-            );
-
-            const uploadParams = {
-                Bucket: config.remoteBucketName,
-                Key: `${dir}/${key}/${path.basename(file)}`,
-                Body: fileStream,
-                ContentType: contentType
-            };
+      const uploadParams = {
+        Bucket: config.remoteBucketName,
+        Key: `${config.browser}/${key}/${path.basename(file)}`,
+        Body: fileStream,
+        ContentType: contentType
+      };
 
             return s3.putObject(uploadParams).promise();
         })

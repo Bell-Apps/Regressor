@@ -8,35 +8,34 @@ const generateSnapShotPromises = (SnapShotter, config) =>
     config.scenarios.reduce((accum, scenario) => {
         scenarioValidator(scenario);
 
-        scenario.viewports.forEach(viewport => {
-            accum.push(
-                new SnapShotter(
-                    {
-                        label: scenario.label,
-                        latest: config.latest,
-                        browser: config.browser,
-                        mobileDeviceName: scenario.mobileDeviceName,
-                        gridUrl: config.gridUrl,
-                        height: viewport.height,
-                        width: viewport.width,
-                        viewportLabel: viewport.label,
-                        cookies: scenario.cookies,
-                        cropToSelector: scenario.cropToSelector,
-                        removeElements: scenario.removeElements,
-                        zeroOpacityElements: scenario.zeroOpacityElements,
-                        waitForElement: scenario.waitForElement,
-                        url: scenario.url,
-                        onBeforeScript: scenario.onBeforeScript,
-                        onReadyScript: scenario.onReadyScript,
-                        wait: scenario.wait
-                    },
-                    { webdriver, By, until },
-                    onComplete
-                )
-            );
-        });
-        return accum;
-    }, []);
+    scenario.viewports.forEach(viewport => {
+      accum.push(
+        new SnapShotter(
+          {
+            label: scenario.label,
+            latest: config.latest,
+            browser: config.browser,
+            mobileDeviceName: scenario.mobileDeviceName,
+            gridUrl: config.gridUrl,
+            height: viewport.height,
+            width: viewport.width,
+            viewportLabel: viewport.label,
+            cookies: scenario.cookies,
+            cropToSelector: scenario.cropToSelector,
+            removeElements: scenario.removeElements,
+            waitForElement: scenario.waitForElement,
+            url: scenario.url,
+            onBeforeScript: scenario.onBeforeScript,
+            onReadyScript: scenario.onReadyScript,
+            wait: scenario.wait
+          },
+          { webdriver, By, until },
+          onComplete
+        )
+      );
+    });
+    return accum;
+  }, []);
 
 async function getScreenshots(SnapShotter, config) {
     return new Promise(async resolve => {

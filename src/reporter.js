@@ -51,4 +51,4 @@ class Reporter {
   }
 }
 
-export default new Reporter();
+export default Reporter;
