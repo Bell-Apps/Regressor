@@ -73,7 +73,7 @@ function createDeletionParams(filteredResults, config) {
     };
 
     for (let i = 0; i < filteredResults.length; i++) {
-        const keyObject = { Key: filteredResults[i].Key };
+        const keyObject = {Key: filteredResults[i].Key};
         params.Delete.Objects.push(keyObject);
     }
     return params;
@@ -82,7 +82,7 @@ function createDeletionParams(filteredResults, config) {
 const deleteRemoteKeys = async (key, config) => {
     const filteredResults = await listRemoteKeys(key, config);
 
-    AWS.config.update({ region: config.remoteRegion });
+    AWS.config.update({region: config.remoteRegion});
     const s3 = new AWS.S3();
 
     const params = createDeletionParams(filteredResults, config);
@@ -99,7 +99,7 @@ const deleteRemoteKeys = async (key, config) => {
 };
 
 const deleteRemoteBucket = config => {
-    AWS.config.update({ region: config.remoteRegion });
+    AWS.config.update({region: config.remoteRegion});
     const s3 = new AWS.S3();
 
     const params = {
@@ -129,20 +129,20 @@ const fetchRemoteKeys = (config, key, imageName) =>
     });
 
 const listRemoteKeys = (key, config) => {
-  AWS.config.update({ region: config.remoteRegion });
-  const s3 = new AWS.S3();
-  const params = { Bucket: config.remoteBucketName };
-  let dir = `${config.browser}`;
-  if (config.branch !== undefined) {
-    dir += `/${config.branch}`;
-  }
-  return s3
-    .listObjectsV2(params)
-    .promise()
-    .then(result => {
-      return result.Contents.filter(item => item.Key.includes(`${dir}/${key}`));
-    })
-    .catch(err => logger.error('remote-actions', err));
+    AWS.config.update({region: config.remoteRegion});
+    const s3 = new AWS.S3();
+    const params = {Bucket: config.remoteBucketName};
+    let dir = `${config.browser}`;
+    if (key !== 'baseline' && config.branch !== undefined)
+        dir += `/${config.branch}`;
+
+    return s3
+        .listObjectsV2(params)
+        .promise()
+        .then(result => {
+            return result.Contents.filter(item => item.Key.includes(`${dir}/${key}`));
+        })
+        .catch(err => logger.error('remote-actions', err));
 };
 
 const uploadRemoteKeys = async (key, config) => {
@@ -170,23 +170,21 @@ const uploadRemoteKeys = async (key, config) => {
 
             const contentType = key === 'report' ? 'text/html' : 'image/png';
 
-      let dir = `${config.browser}`;
-      if (config.branch !== undefined) {
-        dir += `/${config.branch}`;
-      }
-      if (key === 'baseline') dir = `${config.browser}`;
+            let dir = `${config.browser}`;
+            if (key !== 'baseline' && config.branch !== undefined)
+                dir += `/${config.branch}`;
 
-      logger.info(
-        'remote-actions',
-        `Uploading to S3: ${dir}/${key}/${path.basename(file)}`
-      );
+            logger.info(
+                'remote-actions',
+                `Uploading to S3: ${dir}/${key}/${path.basename(file)}`
+            );
 
-      const uploadParams = {
-        Bucket: config.remoteBucketName,
-        Key: `${dir}/${key}/${path.basename(file)}`,
-        Body: fileStream,
-        ContentType: contentType
-      };
+            const uploadParams = {
+                Bucket: config.remoteBucketName,
+                Key: `${dir}/${key}/${path.basename(file)}`,
+                Body: fileStream,
+                ContentType: contentType
+            };
 
             return s3.putObject(uploadParams).promise();
         })
