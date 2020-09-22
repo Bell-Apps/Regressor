@@ -52,6 +52,7 @@ Example config to run Regressor:
     "remoteBucketName": "regressor-example",
     "remoteRegion": "us-west-1",
     "limitAmountOfParallelScenarios": 10, // if you are killing your selenium grid use this to batch up scenarios
+    "onBeforeSuiteScript": "./scripts/login.js", // run a script before the entire suite (this script takes no parameters)
     "scenarios": [
       {
         "url": "http://www.bellhelmets.com/",
@@ -68,7 +69,6 @@ Example config to run Regressor:
         ],
         "waitForElement": ["footer"],
         "onReadyScript": './scripts/clickSelector.js',
-        "onBeforeSuiteScript": "./scripts/login.js" // run a script before the entire suite (this script takes no parameters)
         "wait": 2000 // implicitly wait before taking a snap
       }
     ]
@@ -106,7 +106,7 @@ module.exports = clickElement;
 
 In cases where you need to run a script once, before the entire suite is launched (e.g. setting up global objects or setting up external services), pass the path of the script into `onBeforeSuiteScript` in the config file.
 
-Unlike the onReady and onBefore script options, onBeforeSuite script does not have a driver passed to it as an argument. Any external dependencies will need to be set up independently inside the script.
+Unlike the onReady and onBefore script options, onBeforeSuite script does not have a driver passed to it as an argument. Any external dependencies will need to be set up independently inside the script. However, the script does provide access to the config, so that you can read/modify values dynamically if needed.
 
 ## Mobile Emulator
 
