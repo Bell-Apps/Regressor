@@ -2,11 +2,12 @@
 import jimp from 'jimp';
 import webdriver, { By, until } from './__mocks__/selenium-webdriver';
 import SnapShotter from './snapshotter';
-import seleniumMock from './__mocks__/onReadyScriptMock';
+import { executeScriptWithDriver } from './executeScript';
 import logger from './logger';
 
 jest.mock('fs');
 jest.mock('jimp');
+jest.mock('./executeScript');
 
 const onComplete = () => {};
 const onError = () => {};
@@ -158,14 +159,31 @@ describe('The snapshotter', () => {
         expect(mockSnapshot.driver.executeScript.mock.calls.length).toBe(2);
     });
 
-    it('Hides Selectors', async () => {
-        const config = {
-            gridUrl: 'https://lol.com',
-            url: 'http://test.com/',
-            label: '1homepage',
-            hideElements: ['selector1', 'selector2'],
-            wait: 2000
-        };
+  it('Hides Selectors', async () => {
+    const config = {
+      gridUrl: 'https://lol.com',
+      url: 'http://test.com/',
+      label: '1homepage',
+      hideElements: ['selector1', 'selector2']
+    };
+
+    const mockSnapshot = new SnapShotter(
+      config,
+      { webdriver, By, until },
+      onComplete,
+      onError
+    );
+    await mockSnapshot.takeSnap();
+    expect(mockSnapshot.driver.executeScript.mock.calls.length).toBe(2);
+  });
+
+  it('implicitly waits if specified', async () => {
+    const config = {
+      gridUrl: 'https://lol.com',
+      url: 'http://test.com',
+      label: '1homepage',
+      wait: 2000
+    };
 
         const mockSnapshot = new SnapShotter(
             config,
@@ -206,6 +224,9 @@ describe('The snapshotter', () => {
     });
 
     it('Executes the onBefore script', async () => {
+        const executeScriptMock = jest.fn();
+        executeScriptWithDriver.mockImplementation(executeScriptMock);
+
         const config = {
             gridUrl: 'https://lol.com',
             url: 'http://www.belhelmets.com/',
@@ -220,10 +241,18 @@ describe('The snapshotter', () => {
             onError
         );
         await mockSnapshot.takeSnap();
-        expect(seleniumMock).toBeCalledWith(mockSnapshot.driver, By);
+
+        expect(executeScriptMock).toBeCalledTimes(1);
+        expect(executeScriptMock).toBeCalledWith(
+            mockSnapshot.driver,
+            config.onBeforeScript
+        );
     });
 
     it('Executes the onReady script', async () => {
+        const executeScriptMock = jest.fn();
+        executeScriptWithDriver.mockImplementation(executeScriptMock);
+
         const config = {
             gridUrl: 'https://lol.com',
             url: 'http://www.belhelmets.com/',
@@ -238,10 +267,20 @@ describe('The snapshotter', () => {
             onError
         );
         await mockSnapshot.takeSnap();
-        expect(seleniumMock).toBeCalledWith(mockSnapshot.driver, By);
+
+        expect(executeScriptMock).toBeCalledTimes(1);
+        expect(executeScriptMock).toBeCalledWith(
+            mockSnapshot.driver,
+            config.onReadyScript
+        );
     });
 
     it('Throws an error if incorrect script file is provided', async () => {
+        const executeScriptMock = () => {
+            throw new Error('file not found');
+        };
+        executeScriptWithDriver.mockImplementation(executeScriptMock);
+
         const config = {
             gridUrl: 'https://lol.com',
             url: 'http://www.belhelmets.com/',
@@ -293,9 +332,10 @@ describe('The snapshotter', () => {
     it('runs the onError callback after an error screenshot', async () => {
         const mockOnError = jest.fn();
 
-        SnapShotter.prototype.executeScript = () => {
+        const executeScriptMock = () => {
             throw new Error('sad');
         };
+        executeScriptWithDriver.mockImplementation(executeScriptMock);
 
         try {
             await new SnapShotter(

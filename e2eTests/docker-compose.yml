@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
   hub:
@@ -43,13 +43,13 @@ services:
       - AWS_ACCESS_KEY_ID
     depends_on:
       - hub
-      - ayespy_report
+      - regressor_report
       - firefox
       - chrome
     networks:
       - selenium-grid
 
-  ayespy_report:
+  regressor_report:
     image: nginx
     volumes:
       - ./testSite:/usr/share/nginx/html

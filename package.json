@@ -16,7 +16,9 @@
     "pre-commit": "yarn lint"
   },
   "jest": {
-    "modulePathIgnorePatterns":["./lib"]
+    "modulePathIgnorePatterns": [
+      "./lib"
+    ]
   },
   "lint-staged": {
     "src/**/*.js": [
