@@ -37,7 +37,7 @@ export default {
             StorageClass: 'STANDARD'
         }
     ],
-    Name: 'regresspr',
+    Name: 'regressor',
     Prefix: '',
     MaxKeys: 1000,
     CommonPrefixes: [],
