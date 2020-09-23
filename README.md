@@ -68,6 +68,10 @@ Example config to run Regressor:
           }
         ],
         "waitForElement": ["footer"],
+        "waitForIFrameElement": {
+          "frame": ".iframe", // the id of the iframe that you would like to change to.
+          "element": ".element-in-iframe" // the element in the iframe that you would like to wait for.
+        }
         "onReadyScript": './scripts/clickSelector.js',
         "wait": 2000 // implicitly wait before taking a snap
       }

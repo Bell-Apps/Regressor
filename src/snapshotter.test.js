@@ -9,8 +9,12 @@ jest.mock('fs');
 jest.mock('jimp');
 jest.mock('./executeScript');
 
-const onComplete = () => {};
-const onError = () => {};
+const onComplete = jest.fn();
+const onError = jest.fn();
+
+function createMockSnapshotter(config) {
+    return new SnapShotter(config, { webdriver, By, until }, onComplete, onError);
+}
 
 describe('The snapshotter', () => {
     afterEach(() => {
@@ -24,12 +28,7 @@ describe('The snapshotter', () => {
             url: 'http://lolcats.com'
         };
 
-        const mockSnapshot = new SnapShotter(
-            config,
-            { webdriver, By, until },
-            onComplete,
-            onError
-        );
+        const mockSnapshot = createMockSnapshotter(config);
         await mockSnapshot.takeSnap();
 
         expect(mockSnapshot.driver.get).toBeCalledWith(config.url);
@@ -41,13 +40,9 @@ describe('The snapshotter', () => {
             gridUrl: 'https://lol.com'
         };
 
-        const mockSnapshot = new SnapShotter(
-            config,
-            { webdriver, By, until },
-            onComplete,
-            onError
-        );
+        const mockSnapshot = createMockSnapshotter(config);
         await mockSnapshot.takeSnap();
+
         expect(mockSnapshot.driver.setRect).toBeCalledWith({
             height: 1024,
             width: 700
@@ -55,25 +50,15 @@ describe('The snapshotter', () => {
     });
 
     it('Uses chrome and firefox', () => {
-        new SnapShotter(
-            {
-                gridUrl: 'https://lol.com',
-                browser: 'firefox'
-            },
-            { webdriver, By, until },
-            onComplete,
-            onError
-        );
+        createMockSnapshotter({
+            gridUrl: 'https://lol.com',
+            browser: 'firefox'
+        });
 
-        new SnapShotter(
-            {
-                gridUrl: 'https://lol.com',
-                browser: 'chrome'
-            },
-            { webdriver, By, until },
-            onComplete,
-            onError
-        );
+        createMockSnapshotter({
+            gridUrl: 'https://lol.com',
+            browser: 'chrome'
+        });
 
         expect(webdriver.Capabilities.chrome.mock.calls.length).toBe(1);
         expect(webdriver.Capabilities.firefox.mock.calls.length).toBe(1);
@@ -82,18 +67,14 @@ describe('The snapshotter', () => {
     it('Waits for selectors', async () => {
         const config = {
             gridUrl: 'https://lol.com',
-            url: 'http://www.belhelmets.com/',
+            url: 'http://www.bellhelmets.com/',
             label: '1homepage',
             waitForElement: 'selector'
         };
 
-        const mockSnapshot = new SnapShotter(
-            config,
-            { webdriver, By, until },
-            onComplete,
-            onError
-        );
+        const mockSnapshot = createMockSnapshotter(config);
         await mockSnapshot.takeSnap();
+
         expect(mockSnapshot.driver.wait.mock.calls.length).toBe(1);
         expect(mockSnapshot.driver.wait).toBeCalledWith(
             { _selector: config.waitForElement },
@@ -101,20 +82,58 @@ describe('The snapshotter', () => {
         );
     });
 
+    it('Waits for IFrame selector', async () => {
+        const config = {
+            gridUrl: 'https://lol.com',
+            url: 'http://www.bellhelmets.com/',
+            label: '1homepage',
+            waitForIFrameElement: {
+                frame: 'frame-selector',
+                element: 'element-selector'
+            }
+        };
+
+        const mockSnapshot = createMockSnapshotter(config);
+        await mockSnapshot.takeSnap();
+
+        expect(until.elementLocated).toBeCalledWith(
+            config.waitForIFrameElement.element
+        );
+        expect(mockSnapshot.driver.switchTo().defaultContent).toBeCalled();
+    });
+
+    it('logs when it cannot find the IFrame selector', async () => {
+        const config = {
+            gridUrl: 'https://lol.com',
+            url: 'http://www.bellhelmets.com/',
+            label: '1homepage',
+            waitForIFrameElement: {
+                frame: 'frame-selector',
+                element: 'element-selector'
+            }
+        };
+
+        until.elementLocated = jest.fn().mockImplementationOnce(() => {
+            throw new Error('sad times');
+        });
+        logger.error = jest.fn();
+
+        const mockSnapshot = createMockSnapshotter(config);
+        await mockSnapshot.takeSnap();
+
+        expect(logger.error.mock.calls.length).toBe(1);
+        expect(mockSnapshot.driver.switchTo().defaultContent).toBeCalled();
+    });
+
     it('takes a cropped snapshot', async () => {
         const config = {
             gridUrl: 'https://lol.com',
-            url: 'http://www.belhelmets.com/',
+            url: 'http://www.bellhelmets.com/',
             label: '1homepage',
             cropToSelector: '.thisIsASelector'
         };
 
-        await new SnapShotter(
-            config,
-            { webdriver, By, until },
-            onComplete,
-            onError
-        ).takeSnap();
+        await createMockSnapshotter(config).takeSnap();
 
         expect(jimp.read).toHaveBeenCalled();
     });
@@ -122,7 +141,7 @@ describe('The snapshotter', () => {
     it('Closes the browser if an error is thrown', async () => {
         const config = {
             gridUrl: 'https://lol.com',
-            url: 'http://www.belhelmets.com/',
+            url: 'http://www.bellhelmets.com/',
             label: '1homepage',
             waitForElement: 'selector'
         };
@@ -131,75 +150,59 @@ describe('The snapshotter', () => {
             throw new Error('sad times');
         });
 
-        const mockSnapshot = new SnapShotter(
-            config,
-            { webdriver, By, until },
-            onComplete,
-            onError
-        );
+        const mockSnapshot = createMockSnapshotter(config);
         await mockSnapshot.takeSnap();
+
         expect(mockSnapshot.driver.quit.mock.calls.length).toBe(1);
     });
 
-  it('Removes Selectors', async () => {
-    const config = {
-      gridUrl: 'https://lol.com',
-      url: 'http://www.bellhelmets.com/',
-      label: '1homepage',
-      removeElements: ['selector1', 'selector2']
-    };
+    it('Removes Selectors', async () => {
+        const config = {
+            gridUrl: 'https://lol.com',
+            url: 'http://www.bellhelmets.com/',
+            label: '1homepage',
+            removeElements: ['selector1', 'selector2']
+        };
 
-        const mockSnapshot = new SnapShotter(
-            config,
-            { webdriver, By, until },
-            onComplete,
-            onError
-        );
+        const mockSnapshot = createMockSnapshotter(config);
         await mockSnapshot.takeSnap();
+
         expect(mockSnapshot.driver.executeScript.mock.calls.length).toBe(2);
     });
 
-  it('Hides Selectors', async () => {
-    const config = {
-      gridUrl: 'https://lol.com',
-      url: 'http://test.com/',
-      label: '1homepage',
-      hideElements: ['selector1', 'selector2']
-    };
+    it('Hides Selectors', async () => {
+        const config = {
+            gridUrl: 'https://lol.com',
+            url: 'http://test.com/',
+            label: '1homepage',
+            hideElements: ['selector1', 'selector2']
+        };
 
-    const mockSnapshot = new SnapShotter(
-      config,
-      { webdriver, By, until },
-      onComplete,
-      onError
-    );
-    await mockSnapshot.takeSnap();
-    expect(mockSnapshot.driver.executeScript.mock.calls.length).toBe(2);
-  });
+        const mockSnapshot = createMockSnapshotter(config);
+        await mockSnapshot.takeSnap();
 
-  it('implicitly waits if specified', async () => {
-    const config = {
-      gridUrl: 'https://lol.com',
-      url: 'http://test.com',
-      label: '1homepage',
-      wait: 2000
-    };
+        expect(mockSnapshot.driver.executeScript.mock.calls.length).toBe(2);
+    });
 
-        const mockSnapshot = new SnapShotter(
-            config,
-            { webdriver, By, until },
-            onComplete,
-            onError
-        );
+    it('implicitly waits if specified', async () => {
+        const config = {
+            gridUrl: 'https://lol.com',
+            url: 'http://test.com/',
+            label: '1homepage',
+            wait: 2000
+        };
+
+        const mockSnapshot = createMockSnapshotter(config);
         mockSnapshot.snooze = jest.fn();
         await mockSnapshot.takeSnap();
+
         expect(mockSnapshot.snooze.mock.calls.length).toBe(1);
     });
 
     it('Adds cookies', async () => {
         const config = {
             gridUrl: 'https://lol.com',
-            url: 'http://www.belhelmets.com/',
+            url: 'http://www.bellhelmets.com/',
             label: '1homepage',
             cookies: [
                 {
@@ -213,13 +216,9 @@ describe('The snapshotter', () => {
             ]
         };
 
-        const mockSnapshot = new SnapShotter(
-            config,
-            { webdriver, By, until },
-            onComplete,
-            onError
-        );
+        const mockSnapshot = createMockSnapshotter(config);
         await mockSnapshot.takeSnap();
+
         expect(mockSnapshot.driver.addCookie.mock.calls.length).toBe(2);
     });
 
@@ -229,17 +228,12 @@ describe('The snapshotter', () => {
 
         const config = {
             gridUrl: 'https://lol.com',
-            url: 'http://www.belhelmets.com/',
+            url: 'http://www.bellhelmets.com/',
             label: '1homepage',
             onBeforeScript: './src/__mocks__/onReadyScriptMock.js'
         };
 
-        const mockSnapshot = new SnapShotter(
-            config,
-            { webdriver, By, until },
-            onComplete,
-            onError
-        );
+        const mockSnapshot = createMockSnapshotter(config);
         await mockSnapshot.takeSnap();
 
         expect(executeScriptMock).toBeCalledTimes(1);
@@ -255,17 +249,12 @@ describe('The snapshotter', () => {
 
         const config = {
             gridUrl: 'https://lol.com',
-            url: 'http://www.belhelmets.com/',
+            url: 'http://www.bellhelmets.com/',
             label: '1homepage',
             onReadyScript: './src/__mocks__/onReadyScriptMock.js'
         };
 
-        const mockSnapshot = new SnapShotter(
-            config,
-            { webdriver, By, until },
-            onComplete,
-            onError
-        );
+        const mockSnapshot = createMockSnapshotter(config);
         await mockSnapshot.takeSnap();
 
         expect(executeScriptMock).toBeCalledTimes(1);
@@ -280,98 +269,71 @@ describe('The snapshotter', () => {
             throw new Error('file not found');
         };
         executeScriptWithDriver.mockImplementation(executeScriptMock);
-
         const config = {
             gridUrl: 'https://lol.com',
-            url: 'http://www.belhelmets.com/',
+            url: 'http://www.bellhelmets.com/',
             label: '1homepage',
             onReadyScript: '/brokenfile.js'
         };
 
         logger.error = jest.fn();
-        const mockSnapshot = new SnapShotter(
-            config,
-            { webdriver, By, until },
-            onComplete,
-            onError
-        );
+        const mockSnapshot = createMockSnapshotter(config);
         await mockSnapshot.takeSnap();
+
         expect(logger.error.mock.calls.length).toBe(1);
     });
 
     it('Returns the mobile browser capabilities when called with a mobile emulator', async () => {
         const mockSnapshot = (SnapShotter.prototype.getMobileBrowserCapability = jest.fn());
-        new SnapShotter(
-            {
-                gridUrl: 'https://lol.com',
-                mobileDeviceName: 'test'
-            },
-            { webdriver, By, until },
-            onComplete,
-            onError
-        );
+
+        createMockSnapshotter({
+            gridUrl: 'https://lol.com',
+            mobileDeviceName: 'test'
+        });
 
         expect(mockSnapshot.mock.calls.length).toBe(1);
     });
 
     it('Returns the desktop capabilities when called with a non-mobile browser', async () => {
         const mockSnapshot = (SnapShotter.prototype.getMobileBrowserCapability = jest.fn());
-        new SnapShotter(
-            {
-                gridUrl: 'https://lol.com',
-                browser: 'chrome'
-            },
-            { webdriver, By, until },
-            onComplete,
-            onError
-        );
+
+        createMockSnapshotter({
+            gridUrl: 'https://lol.com',
+            browser: 'chrome'
+        });
 
         expect(mockSnapshot.mock.calls.length).toBe(0);
     });
 
     it('runs the onError callback after an error screenshot', async () => {
-        const mockOnError = jest.fn();
-
         const executeScriptMock = () => {
             throw new Error('sad');
         };
         executeScriptWithDriver.mockImplementation(executeScriptMock);
 
         try {
-            await new SnapShotter(
-                {
-                    gridUrl: 'https://lol.com',
-                    browser: 'chrome',
-                    onBeforeScript: 'willthrow'
-                },
-                { webdriver, By, until },
-                onComplete,
-                mockOnError
-            ).takeSnap();
+            await createMockSnapshotter({
+                gridUrl: 'https://lol.com',
+                browser: 'chrome',
+                onBeforeScript: 'willthrow'
+            }).takeSnap();
         } finally {
-            expect(mockOnError.mock.calls.length).toBe(1);
+            expect(onError.mock.calls.length).toBe(1);
         }
     });
 
     it('runs the on-complete callback after finishing snapping', async () => {
-        const mockOnComplete = jest.fn();
         try {
-            await new SnapShotter(
-                {
-                    gridUrl: 'https://lol.com',
-                    browser: 'chrome'
-                },
-                { webdriver, By, until },
-                mockOnComplete,
-                onError
-            ).takeSnap();
+            await createMockSnapshotter({
+                gridUrl: 'https://lol.com',
+                browser: 'chrome'
+            }).takeSnap();
         } finally {
-            expect(mockOnComplete.mock.calls.length).toBe(1);
+            expect(onComplete.mock.calls.length).toBe(1);
         }
     });
 
     it('quits gracefully if connecting to the grid fails', async () => {
-        const mockOnError = jest.fn();
         class Builder {
             build() {
                 const wrap = {
@@ -385,17 +347,12 @@ describe('The snapshotter', () => {
         webdriver.Builder = Builder;
 
         try {
-            await new SnapShotter(
-                {
-                    gridUrl: 'https://ERRRORURL.com',
-                    browser: 'chrome'
-                },
-                { webdriver, By, until },
-                onComplete,
-                mockOnError
-            ).takeSnap();
+            await createMockSnapshotter({
+                gridUrl: 'https://ERRRORURL.com',
+                browser: 'chrome'
+            }).takeSnap();
         } finally {
-            expect(mockOnError).toBeCalled();
+            expect(onError).toBeCalled();
             expect(process.exitCode).toBe(1);
         }
     });
