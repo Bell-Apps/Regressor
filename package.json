@@ -30,21 +30,18 @@
   "bin": {
     "regressor": "lib/bin/run.js"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/wgalyen"
-  },
-  "repository": "git+https://github.com/wgalyen/Regressor.git",
+  "repository": "git+https://github.com/bell-apps/Regressor.git",
   "keywords": [
     "visual-regression",
     "testing",
     "test"
   ],
   "author": "Warren Galyen",
-  "license": "ISC",
+  "license": "BSD-3",
   "bugs": {
-    "url": "https://github.com/wgalyen/Regressor/issues"
+    "url": "https://github.com/bell-apps/Regressor/issues"
   },
-  "homepage": "https://github.com/wgalyen/Regressor#readme",
+  "homepage": "https://github.com/bell-apps/Regressor#readme",
   "dependencies": {
     "aws-sdk": "^2.252.1",
     "cli-progress": "2.1.1",

@@ -1,7 +1,8 @@
 # Regressor
-Visual Regression Tool to catch css bugs
 
 Regressor is a high performance visual regression tool to catch UI regressions. 
+
+![](regressor_report.png)
 
 ## Inspiration
 
@@ -35,10 +36,17 @@ In order to get the most out of Regressor we recommend
   - Cloud storage (currently supporting Amazon S3)
 
 To install the package:
-`npm i -g regressor`
 
+#### `git clone`
 
-    regressor init 
+```bash
+cd ~
+git clone https://github.com/bell-apps/regressor.git
+cd regressor
+npm install -g
+regressor
+```
+
 
 Example config to run Regressor:
 
