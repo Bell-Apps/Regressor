@@ -2,7 +2,7 @@
 
 Regressor is a high performance visual regression tool to catch UI regressions. 
 
-![](regressor_report.png)
+![Report](regressor_report.png)
 
 ## Inspiration
 

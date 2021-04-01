@@ -47,3 +47,4 @@ generatedDiffs/
 report/
 
 aws-config.json
+*.env
