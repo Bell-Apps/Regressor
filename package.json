@@ -55,7 +55,7 @@
   },
   "devDependencies": {
     "coveralls": "3.0.2",
-    "snyk": "^1.118.0",
+    "snyk": "^1.996.0",
     "release-documentation-cli": "2.5.3",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
